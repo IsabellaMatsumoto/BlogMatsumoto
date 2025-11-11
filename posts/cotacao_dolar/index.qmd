@@ -1,6 +1,6 @@
 ---
 title: "Cotação do Dólar por Período"
-date: 2025-11-12
+date: 2025-11-10
 image: grafico.jpg
 description: "Consulta à API do Banco Central para gerar um gráfico de cotação do dólar."
 categories: [Python, API, Plotly]

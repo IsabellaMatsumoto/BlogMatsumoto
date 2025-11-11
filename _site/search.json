@@ -67,7 +67,7 @@
     "href": "posts/Monitoramento_frota/index.html#código-em-python",
     "title": "Monitoramento de Frota de Ônibus",
     "section": "Código em Python",
-    "text": "Código em Python"
+    "text": "Código em Python\nO código completo pode ser visto aqui. Gráfico aqui."
   },
   {
     "objectID": "posts/cotacao_dolar/index.html",
@@ -131,5 +131,12 @@
     "title": "Cotação do Dólar por Período",
     "section": "Resultado",
     "text": "Resultado\n#| echo: false #| fig-cap: “Cotação do Dólar em Agosto de 2021” import requests import pandas as pd import plotly.express as px import calendar from datetime import datetime\ndef cotacao_dolar_periodo(mes_ano: str):\n    # Converte string \"MMYYYY\" em datas inicial e final\n    first_date = datetime.strptime(mes_ano, \"%m%Y\")\n    last_day = calendar.monthrange(first_date.year, first_date.month)[1]\n\n    data_inicial = first_date.strftime(\"%m-%d-%Y\")\n    data_final = first_date.replace(day=last_day).strftime(\"%m-%d-%Y\")\n\n    print(data_inicial, data_final)\n\n    # Monta a URL da API\n    url = (\n        \"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/\"\n        f\"CotacaoDolarPeriodo(dataInicial=@dataInicial,dataFinalCotacao=@dataFinalCotacao)?\"\n        f\"@dataInicial='{data_inicial}'&@dataFinalCotacao='{data_final}'&\"\n        \"$top=1000&$format=json&$select=cotacaoCompra,dataHoraCotacao\"\n    )\n\n    # Faz a requisição\n    r = requests.get(url)\n    if r.status_code != 200:\n        raise Exception(\"Erro ao acessar a API do Banco Central\")\n\n    dados = r.json().get(\"value\", [])\n    if not dados:\n        raise Exception(\"Nenhum dado retornado pela API\")\n\n    # Converte para DataFrame\n    df = pd.DataFrame(dados)\n    df[\"dataHoraCotacao\"] = pd.to_datetime(df[\"dataHoraCotacao\"])\n    df = df.sort_values(\"dataHoraCotacao\")\n\n    # Cria o gráfico\n    fig = px.line(\n        df,\n        x=\"dataHoraCotacao\",\n        y=\"cotacaoCompra\",\n        title=f\"Cotação do Dólar - {first_date.strftime('%B de %Y')}\",\n        labels={\"dataHoraCotacao\": \"Data\", \"cotacaoCompra\": \"Cotação (R$)\"}\n    )\n    fig.write_html(\"grafico_dolar.html\")\n    print(\"Gráfico salvo em grafico_dolar.html — abra no navegador.\")\n\nif __name__ == \"__main__\":\n    cotacao_dolar_periodo(\"082021\")"
+  },
+  {
+    "objectID": "posts/Monitoramento_frota/index.html#código-em-python-1",
+    "href": "posts/Monitoramento_frota/index.html#código-em-python-1",
+    "title": "Monitoramento de Frota de Ônibus",
+    "section": "Código em Python",
+    "text": "Código em Python\n#| echo: false #| fig-cap: “Monitoramento de frota de ônibus - Linha 875A-10 - VILA MARIANA ↔︎ AEROPORTO (CONGONHAS)”\nimport os import requests import folium from dotenv import load_dotenv\nload_dotenv(“.env”) TOKEN = os.getenv(“SPTRANS_TOKEN”)\ns = requests.Session() auth = s.post(f”http://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token={TOKEN}“)\nif auth.text.lower() != “true”: print(“Falha na autenticação com o token SPTrans.”) exit()\nlinha_nome = “875A” url_linhas = f”http://api.olhovivo.sptrans.com.br/v2.1/Linha/Buscar?termosBusca={linha_nome}” res_linhas = s.get(url_linhas) linhas = res_linhas.json()\nif not linhas: print(“Nenhuma linha encontrada.”) exit()\n#Exibe as direções disponíveis for i, l in enumerate(linhas, start=1): sentido = “Ida” if l[“sl”] == 1 else “Volta” print(f”{i}. {l[‘lt’]} - {l[‘tp’]} → {l[‘ts’]} ({sentido}) | Código: {l[‘cl’]}“)"
   }
 ]

@@ -1,36 +1,3 @@
----
-title: "Monitoramento de Frota de Ônibus"
-date: 2025-11-11
-image: frota.jpg
-description: "Mapa interativo com paradas e posições em tempo real de ônibus."
-categories: [Python, API, Mapas]
----
-
-## Resumo
-
-O objetivo desta atividade foi construir um **mapa interativo** com as **paradas de uma linha de ônibus** e as **posições em tempo real dos veículos**.  
-A aplicação consulta uma **API pública de transporte**, utilizando um **token de acesso**, e exibe as informações em um mapa interativo com **pins coloridos diferentes** para paradas e ônibus.
-
----
-
-## 🧠 Objetivo
-
-Visualizar no mapa tanto as paradas fixas quanto os ônibus em movimento de uma linha específica.
-
----
-
-## Código em Python
-
-O código completo pode ser visto [aqui](frota_onibus.py).
-Gráfico [aqui](mapa_frota_875A-10.html).
-
----
-
-## Código em Python
-```{python}
-#| echo: false
-#| fig-cap: "Monitoramento de frota de ônibus - Linha 875A-10 - VILA MARIANA ↔ AEROPORTO (CONGONHAS)"
-
 import os
 import requests
 import folium
