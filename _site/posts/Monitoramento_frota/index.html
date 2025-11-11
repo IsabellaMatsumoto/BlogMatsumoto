@@ -166,50 +166,97 @@ A aplicação consulta uma <strong>API pública de transporte</strong>, utilizan
 <hr>
 </section>
 <section id="objetivo" class="level2">
-<h2 class="anchored" data-anchor-id="objetivo">🧠 Objetivo</h2>
+<h2 class="anchored" data-anchor-id="objetivo">Objetivo</h2>
 <p>Visualizar no mapa tanto as paradas fixas quanto os ônibus em movimento de uma linha específica.</p>
 <hr>
 </section>
 <section id="código-em-python" class="level2">
 <h2 class="anchored" data-anchor-id="código-em-python">Código em Python</h2>
-<p>O código completo pode ser visto <a href="frota_onibus.py">aqui</a>. Gráfico <a href="mapa_frota_875A-10.html">aqui</a>.</p>
+<p>O código completo pode ser visto <a href="frota_onibus.py">aqui</a>. Rota <a href="mapa_frota_875A-10.html">aqui</a>.</p>
 <hr>
 </section>
 <section id="código-em-python-1" class="level2">
 <h2 class="anchored" data-anchor-id="código-em-python-1">Código em Python</h2>
 <p>#| echo: false #| fig-cap: “Monitoramento de frota de ônibus - Linha 875A-10 - VILA MARIANA ↔︎ AEROPORTO (CONGONHAS)”</p>
-<p>import os import requests import folium from dotenv import load_dotenv</p>
-<p>load_dotenv(“.env”) TOKEN = os.getenv(“SPTRANS_TOKEN”)</p>
-<p>s = requests.Session() auth = s.post(f”http://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token={TOKEN}“)</p>
-<p>if auth.text.lower() != “true”: print(“Falha na autenticação com o token SPTrans.”) exit()</p>
-<p>linha_nome = “875A” url_linhas = f”http://api.olhovivo.sptrans.com.br/v2.1/Linha/Buscar?termosBusca={linha_nome}” res_linhas = s.get(url_linhas) linhas = res_linhas.json()</p>
-<p>if not linhas: print(“Nenhuma linha encontrada.”) exit()</p>
-<p>#Exibe as direções disponíveis for i, l in enumerate(linhas, start=1): sentido = “Ida” if l[“sl”] == 1 else “Volta” print(f”{i}. {l[‘lt’]} - {l[‘tp’]} → {l[‘ts’]} ({sentido}) | Código: {l[‘cl’]}“)</p>
-</section>
-<section id="usa-a-primeira-linha" class="level1">
-<h1>Usa a primeira linha</h1>
-<p>linha = linhas[0] codigo_linha = linha[“cl”] sentido = linha[“sl”]</p>
-<p>print(f”selecionada: {linha[‘lt’]} - {linha[‘tp’]} → {linha[‘ts’]} ({‘Ida’ if sentido == 1 else ‘Volta’})“)</p>
-</section>
-<section id="buscar-paradas-da-linha" class="level1">
-<h1>Buscar paradas da linha</h1>
-<p>url_paradas = f”http://api.olhovivo.sptrans.com.br/v2.1/Parada/BuscarParadasPorLinha?codigoLinha={codigo_linha}&amp;sentido={sentido}” res_paradas = s.get(url_paradas) paradas = res_paradas.json()</p>
-<p>if not paradas: print(“Nenhuma parada encontrada para esta linha e sentido.”) exit()</p>
-</section>
-<section id="criação-do-mapa" class="level1">
-<h1>Criação do mapa</h1>
-<p>mapa = folium.Map(location=[paradas[0][“py”], paradas[0][“px”]], zoom_start=13)</p>
-</section>
-<section id="pinos-azuis-paradas" class="level1">
-<h1>Pinos azuis = paradas</h1>
-<p>for parada in paradas: folium.Marker( [parada[“py”], parada[“px”]], popup=parada[“np”], icon=folium.Icon(color=“blue”, icon=“bus”, prefix=“fa”) ).add_to(mapa)</p>
-</section>
-<section id="posições-em-tempo-real" class="level1">
-<h1>Posições em tempo real</h1>
-<p>url_posicoes = f”http://api.olhovivo.sptrans.com.br/v2.1/Posicao?codigoLinha={codigo_linha}” res_posicoes = s.get(url_posicoes) dados_posicao = res_posicoes.json()</p>
-<p>veiculos = [] if dados_posicao and “vs” in dados_posicao: veiculos = dados_posicao[“vs”]</p>
-<p>if veiculos: for v in veiculos: folium.Marker( [v[“py”], v[“px”]], popup=f”Ônibus {v[‘p’]}“, icon=folium.Icon(color=”red”, icon=“location-dot”, prefix=“fa”) ).add_to(mapa) else: print(” Nenhum ônibus encontrado em tempo real no momento.”)</p>
-<p>#Linha 875A-10 - VILA MARIANA ↔︎ AEROPORTO (CONGONHAS) mapa.save(“mapa_frota_875A-10.html”) print(“Pinos azuis = paradas | Pinos vermelhos = ônibus em tempo real”)</p>
+<pre><code>import os
+import requests
+import folium
+from dotenv import load_dotenv
+
+load_dotenv(".env")
+TOKEN = os.getenv("SPTRANS_TOKEN")
+
+s = requests.Session()
+auth = s.post(f"http://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token={TOKEN}")
+
+if auth.text.lower() != "true":
+    print("Falha na autenticação com o token SPTrans.")
+    exit()
+
+linha_nome = "875A"
+url_linhas = f"http://api.olhovivo.sptrans.com.br/v2.1/Linha/Buscar?termosBusca={linha_nome}"
+res_linhas = s.get(url_linhas)
+linhas = res_linhas.json()
+
+if not linhas:
+    print("Nenhuma linha encontrada.")
+    exit()
+
+#Exibe as direções disponíveis 
+for i, l in enumerate(linhas, start=1):
+    sentido = "Ida" if l["sl"] == 1 else "Volta"
+    print(f"{i}. {l['lt']} - {l['tp']} → {l['ts']} ({sentido}) | Código: {l['cl']}")
+
+# Usa a primeira linha 
+linha = linhas[0]
+codigo_linha = linha["cl"]
+sentido = linha["sl"]
+
+print(f"\nLinha selecionada: {linha['lt']} - {linha['tp']} → {linha['ts']} ({'Ida' if sentido == 1 else 'Volta'})")
+
+# Buscar paradas da linha 
+url_paradas = f"http://api.olhovivo.sptrans.com.br/v2.1/Parada/BuscarParadasPorLinha?codigoLinha={codigo_linha}&amp;sentido={sentido}"
+res_paradas = s.get(url_paradas)
+paradas = res_paradas.json()
+
+if not paradas:
+    print("Nenhuma parada encontrada para esta linha e sentido.")
+    exit()
+
+# Criação do mapa 
+mapa = folium.Map(location=[paradas[0]["py"], paradas[0]["px"]], zoom_start=13)
+
+# Pinos azuis = paradas
+for parada in paradas:
+    folium.Marker(
+        [parada["py"], parada["px"]],
+        popup=parada["np"],
+        icon=folium.Icon(color="blue", icon="bus", prefix="fa")
+    ).add_to(mapa)
+
+# Posições em tempo real 
+url_posicoes = f"http://api.olhovivo.sptrans.com.br/v2.1/Posicao?codigoLinha={codigo_linha}"
+res_posicoes = s.get(url_posicoes)
+dados_posicao = res_posicoes.json()
+
+veiculos = []
+if dados_posicao and "vs" in dados_posicao:
+    veiculos = dados_posicao["vs"]
+
+
+if veiculos:
+    for v in veiculos:
+        folium.Marker(
+            [v["py"], v["px"]],
+            popup=f"Ônibus {v['p']}",
+            icon=folium.Icon(color="red", icon="location-dot", prefix="fa")
+        ).add_to(mapa)
+else:
+    print(" Nenhum ônibus encontrado em tempo real no momento.")
+
+#Linha 875A-10 - VILA MARIANA ↔ AEROPORTO (CONGONHAS)
+mapa.save("mapa_frota_875A-10.html")
+print("Pinos azuis = paradas | Pinos vermelhos = ônibus em tempo real")</code></pre>
 
 
 </section>

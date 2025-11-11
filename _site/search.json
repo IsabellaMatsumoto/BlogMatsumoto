@@ -59,15 +59,15 @@
     "objectID": "posts/Monitoramento_frota/index.html#objetivo",
     "href": "posts/Monitoramento_frota/index.html#objetivo",
     "title": "Monitoramento de Frota de Ônibus",
-    "section": "🧠 Objetivo",
-    "text": "🧠 Objetivo\nVisualizar no mapa tanto as paradas fixas quanto os ônibus em movimento de uma linha específica."
+    "section": "Objetivo",
+    "text": "Objetivo\nVisualizar no mapa tanto as paradas fixas quanto os ônibus em movimento de uma linha específica."
   },
   {
     "objectID": "posts/Monitoramento_frota/index.html#código-em-python",
     "href": "posts/Monitoramento_frota/index.html#código-em-python",
     "title": "Monitoramento de Frota de Ônibus",
     "section": "Código em Python",
-    "text": "Código em Python\nO código completo pode ser visto aqui. Gráfico aqui."
+    "text": "Código em Python\nO código completo pode ser visto aqui. Rota aqui."
   },
   {
     "objectID": "posts/cotacao_dolar/index.html",
@@ -137,6 +137,6 @@
     "href": "posts/Monitoramento_frota/index.html#código-em-python-1",
     "title": "Monitoramento de Frota de Ônibus",
     "section": "Código em Python",
-    "text": "Código em Python\n#| echo: false #| fig-cap: “Monitoramento de frota de ônibus - Linha 875A-10 - VILA MARIANA ↔︎ AEROPORTO (CONGONHAS)”\nimport os import requests import folium from dotenv import load_dotenv\nload_dotenv(“.env”) TOKEN = os.getenv(“SPTRANS_TOKEN”)\ns = requests.Session() auth = s.post(f”http://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token={TOKEN}“)\nif auth.text.lower() != “true”: print(“Falha na autenticação com o token SPTrans.”) exit()\nlinha_nome = “875A” url_linhas = f”http://api.olhovivo.sptrans.com.br/v2.1/Linha/Buscar?termosBusca={linha_nome}” res_linhas = s.get(url_linhas) linhas = res_linhas.json()\nif not linhas: print(“Nenhuma linha encontrada.”) exit()\n#Exibe as direções disponíveis for i, l in enumerate(linhas, start=1): sentido = “Ida” if l[“sl”] == 1 else “Volta” print(f”{i}. {l[‘lt’]} - {l[‘tp’]} → {l[‘ts’]} ({sentido}) | Código: {l[‘cl’]}“)"
+    "text": "Código em Python\n#| echo: false #| fig-cap: “Monitoramento de frota de ônibus - Linha 875A-10 - VILA MARIANA ↔︎ AEROPORTO (CONGONHAS)”\nimport os\nimport requests\nimport folium\nfrom dotenv import load_dotenv\n\nload_dotenv(\".env\")\nTOKEN = os.getenv(\"SPTRANS_TOKEN\")\n\ns = requests.Session()\nauth = s.post(f\"http://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token={TOKEN}\")\n\nif auth.text.lower() != \"true\":\n    print(\"Falha na autenticação com o token SPTrans.\")\n    exit()\n\nlinha_nome = \"875A\"\nurl_linhas = f\"http://api.olhovivo.sptrans.com.br/v2.1/Linha/Buscar?termosBusca={linha_nome}\"\nres_linhas = s.get(url_linhas)\nlinhas = res_linhas.json()\n\nif not linhas:\n    print(\"Nenhuma linha encontrada.\")\n    exit()\n\n#Exibe as direções disponíveis \nfor i, l in enumerate(linhas, start=1):\n    sentido = \"Ida\" if l[\"sl\"] == 1 else \"Volta\"\n    print(f\"{i}. {l['lt']} - {l['tp']} → {l['ts']} ({sentido}) | Código: {l['cl']}\")\n\n# Usa a primeira linha \nlinha = linhas[0]\ncodigo_linha = linha[\"cl\"]\nsentido = linha[\"sl\"]\n\nprint(f\"\\nLinha selecionada: {linha['lt']} - {linha['tp']} → {linha['ts']} ({'Ida' if sentido == 1 else 'Volta'})\")\n\n# Buscar paradas da linha \nurl_paradas = f\"http://api.olhovivo.sptrans.com.br/v2.1/Parada/BuscarParadasPorLinha?codigoLinha={codigo_linha}&sentido={sentido}\"\nres_paradas = s.get(url_paradas)\nparadas = res_paradas.json()\n\nif not paradas:\n    print(\"Nenhuma parada encontrada para esta linha e sentido.\")\n    exit()\n\n# Criação do mapa \nmapa = folium.Map(location=[paradas[0][\"py\"], paradas[0][\"px\"]], zoom_start=13)\n\n# Pinos azuis = paradas\nfor parada in paradas:\n    folium.Marker(\n        [parada[\"py\"], parada[\"px\"]],\n        popup=parada[\"np\"],\n        icon=folium.Icon(color=\"blue\", icon=\"bus\", prefix=\"fa\")\n    ).add_to(mapa)\n\n# Posições em tempo real \nurl_posicoes = f\"http://api.olhovivo.sptrans.com.br/v2.1/Posicao?codigoLinha={codigo_linha}\"\nres_posicoes = s.get(url_posicoes)\ndados_posicao = res_posicoes.json()\n\nveiculos = []\nif dados_posicao and \"vs\" in dados_posicao:\n    veiculos = dados_posicao[\"vs\"]\n\n\nif veiculos:\n    for v in veiculos:\n        folium.Marker(\n            [v[\"py\"], v[\"px\"]],\n            popup=f\"Ônibus {v['p']}\",\n            icon=folium.Icon(color=\"red\", icon=\"location-dot\", prefix=\"fa\")\n        ).add_to(mapa)\nelse:\n    print(\" Nenhum ônibus encontrado em tempo real no momento.\")\n\n#Linha 875A-10 - VILA MARIANA ↔ AEROPORTO (CONGONHAS)\nmapa.save(\"mapa_frota_875A-10.html\")\nprint(\"Pinos azuis = paradas | Pinos vermelhos = ônibus em tempo real\")"
   }
 ]
