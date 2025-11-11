@@ -4,14 +4,14 @@
     "href": "index.html",
     "title": "Isabella Matsumoto",
     "section": "",
-    "text": "Bem-vindo(a) ao BlogMatsumoto, um espaço para compartilhar ideias, projetos e aprendizados sobre TI, engenharia da computação, design e curiosidades do mundo tech"
+    "text": "Engenharia da Computação\nBem-vindo(a) ao BlogMatsumoto, um espaço para compartilhar ideias, projetos e aprendizados sobre TI, engenharia da computação, design e curiosidades do mundo tech"
   },
   {
     "objectID": "posts/post-with-code/index.html",
     "href": "posts/post-with-code/index.html",
-    "title": "Post With Code",
+    "title": "Cotação do Dólar por Período",
     "section": "",
-    "text": "This is a post with executable code."
+    "text": "Nesta atividade foi desenvolvida uma rotina em Python que consulta a API do Banco Central (PTAX) para obter a cotação do dólar em um período específico. A função recebe como entrada uma string no formato “MMYYYY” e calcula automaticamente as datas inicial e final do mês correspondente. Os dados são processados com Pandas e exibidos em um gráfico de linha interativo com Plotly, mostrando a variação do câmbio ao longo do mês."
   },
   {
     "objectID": "about.html",
@@ -23,9 +23,9 @@
   {
     "objectID": "posts/welcome/index.html",
     "href": "posts/welcome/index.html",
-    "title": "Welcome To My Blog",
+    "title": "Monitoramento de Frata de Ônibus",
     "section": "",
-    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+    "text": "O objetivo desta atividade foi construir um mapa interativo que mostra as paradas de uma linha de ônibus e as posições em tempo real dos veículos. Utilizando uma API pública de transporte e o token de acesso configurado, o código busca os dados e exibe tudo em um mapa com marcadores coloridos diferentes para paradas e veículos, facilitando a visualização do deslocamento e a comparação entre pontos fixos e posições atuais."
   },
   {
     "objectID": "index.html#últimos-posts",
@@ -33,5 +33,96 @@
     "title": "Isabella Matsumoto",
     "section": "Últimos posts",
     "text": "Últimos posts"
+  },
+  {
+    "objectID": "index.html#categorias",
+    "href": "index.html#categorias",
+    "title": "Isabella Matsumoto",
+    "section": "🏷️ Categorias",
+    "text": "🏷️ Categorias\nExplore por temas:\n\n💻 Programação & Scripts\n📈 Visualização & Plotly\n🚌 Sistemas & Mapas\n🧮 Modelagem & Regressão\n\n\n\nFeito por Isabella e Quarto • © 2025 BlogMatsumoto"
+  },
+  {
+    "objectID": "posts/Monitoramento_frota/index.html",
+    "href": "posts/Monitoramento_frota/index.html",
+    "title": "Monitoramento de Frota de Ônibus",
+    "section": "",
+    "text": "O objetivo desta atividade foi construir um mapa interativo com as paradas de uma linha de ônibus e as posições em tempo real dos veículos.\nA aplicação consulta uma API pública de transporte, utilizando um token de acesso, e exibe as informações em um mapa interativo com pins coloridos diferentes para paradas e ônibus."
+  },
+  {
+    "objectID": "posts/Monitoramento_frota/index.html#resumo",
+    "href": "posts/Monitoramento_frota/index.html#resumo",
+    "title": "Monitoramento de Frota de Ônibus",
+    "section": "",
+    "text": "O objetivo desta atividade foi construir um mapa interativo com as paradas de uma linha de ônibus e as posições em tempo real dos veículos.\nA aplicação consulta uma API pública de transporte, utilizando um token de acesso, e exibe as informações em um mapa interativo com pins coloridos diferentes para paradas e ônibus."
+  },
+  {
+    "objectID": "posts/Monitoramento_frota/index.html#objetivo",
+    "href": "posts/Monitoramento_frota/index.html#objetivo",
+    "title": "Monitoramento de Frota de Ônibus",
+    "section": "🧠 Objetivo",
+    "text": "🧠 Objetivo\nVisualizar no mapa tanto as paradas fixas quanto os ônibus em movimento de uma linha específica."
+  },
+  {
+    "objectID": "posts/Monitoramento_frota/index.html#código-em-python",
+    "href": "posts/Monitoramento_frota/index.html#código-em-python",
+    "title": "Monitoramento de Frota de Ônibus",
+    "section": "Código em Python",
+    "text": "Código em Python"
+  },
+  {
+    "objectID": "posts/cotacao_dolar/index.html",
+    "href": "posts/cotacao_dolar/index.html",
+    "title": "Cotação do Dólar por Período",
+    "section": "",
+    "text": "Nesta atividade foi desenvolvida uma rotina em Python que consulta a API do Banco Central (PTAX) para obter a cotação do dólar em um período específico.\nA função recebe uma string no formato \"MMYYYY\" e determina automaticamente as datas inicial e final do mês.\nOs dados são processados com Pandas e visualizados em um gráfico de linha interativo com Plotly."
+  },
+  {
+    "objectID": "posts/cotacao_dolar/index.html#resumo",
+    "href": "posts/cotacao_dolar/index.html#resumo",
+    "title": "Cotação do Dólar por Período",
+    "section": "",
+    "text": "Nesta atividade foi desenvolvida uma rotina em Python que consulta a API do Banco Central (PTAX) para obter a cotação do dólar em um período específico.\nA função recebe uma string no formato \"MMYYYY\" e determina automaticamente as datas inicial e final do mês.\nOs dados são processados com Pandas e visualizados em um gráfico de linha interativo com Plotly."
+  },
+  {
+    "objectID": "posts/cotacao_dolar/index.html#objetivo",
+    "href": "posts/cotacao_dolar/index.html#objetivo",
+    "title": "Cotação do Dólar por Período",
+    "section": "Objetivo",
+    "text": "Objetivo\nCriar uma rotina que receba como parâmetro \"MMYYYY\" e gere um gráfico com a cotação do dólar no período correspondente."
+  },
+  {
+    "objectID": "posts/cotacao_dolar/index.html#código-em-python",
+    "href": "posts/cotacao_dolar/index.html#código-em-python",
+    "title": "Cotação do Dólar por Período",
+    "section": "Código em Python",
+    "text": "Código em Python\n```python import requests import pandas as pd import plotly.express as px import calendar from datetime import datetime\ndef cotacao_dolar(mmyyyy): first_date = datetime.strptime(mmyyyy, “%m%Y”) last_date = first_date.replace(day=calendar.monthrange(first_date.year, first_date.month)[1])\nurl = (f\"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/\"\n       f\"CotacaoDolarPeriodo(dataInicial=@dataInicial,dataFinalCotacao=@dataFinalCotacao)?\"\n       f\"@dataInicial='{first_date:%m-%d-%Y}'&@dataFinalCotacao='{last_date:%m-%d-%Y}'&\"\n       \"$format=json\")\n\nr = requests.get(url)\ndados = r.json()[\"value\"]\ndf = pd.DataFrame(dados)\ndf[\"dataHoraCotacao\"] = pd.to_datetime(df[\"dataHoraCotacao\"])\n\nfig = px.line(df, x=\"dataHoraCotacao\", y=\"cotacaoVenda\",\n              title=\"Cotação do Dólar - \" + mmyyyy)\nfig.show()\ncotacao_dolar(“082021”)"
+  },
+  {
+    "objectID": "posts/Regressao_linear/index.html",
+    "href": "posts/Regressao_linear/index.html",
+    "title": "Regressão Linear",
+    "section": "",
+    "text": "Nesta tarefa foi aplicada a técnica de regressão linear para analisar a relação entre os anos de estudo (X) e o salário (y).\nOs dados são carregados de arquivos .txt e os coeficientes são calculados manualmente com a fórmula matricial.\nO gráfico gerado com Plotly mostra a linha estimada sobre os pontos dos dados."
+  },
+  {
+    "objectID": "posts/Regressao_linear/index.html#resumo",
+    "href": "posts/Regressao_linear/index.html#resumo",
+    "title": "Regressão Linear",
+    "section": "",
+    "text": "Nesta tarefa foi aplicada a técnica de regressão linear para analisar a relação entre os anos de estudo (X) e o salário (y).\nOs dados são carregados de arquivos .txt e os coeficientes são calculados manualmente com a fórmula matricial.\nO gráfico gerado com Plotly mostra a linha estimada sobre os pontos dos dados."
+  },
+  {
+    "objectID": "posts/Regressao_linear/index.html#objetivo",
+    "href": "posts/Regressao_linear/index.html#objetivo",
+    "title": "Regressão Linear",
+    "section": "Objetivo",
+    "text": "Objetivo\nCalcular os coeficientes da regressão linear por meio da fórmula matricial e exibir o gráfico resultante."
+  },
+  {
+    "objectID": "posts/Regressao_linear/index.html#código-em-python",
+    "href": "posts/Regressao_linear/index.html#código-em-python",
+    "title": "Regressão Linear",
+    "section": "Código em Python",
+    "text": "Código em Python"
   }
 ]

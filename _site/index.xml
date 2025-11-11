@@ -10,49 +10,126 @@
 <atom:link href="https://your-website-url.example.com/index.xml" rel="self" type="application/rss+xml"/>
 <description>A blog built with Quarto</description>
 <generator>quarto-1.8.25</generator>
-<lastBuildDate>Mon, 10 Nov 2025 03:00:00 GMT</lastBuildDate>
+<lastBuildDate>Thu, 13 Nov 2025 03:00:00 GMT</lastBuildDate>
 <item>
-  <title>Post With Code</title>
-  <dc:creator>Harlow Malloc</dc:creator>
-  <link>https://your-website-url.example.com/posts/post-with-code/</link>
+  <title>Regressão Linear</title>
+  <link>https://your-website-url.example.com/posts/Regressao_linear/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p>This is a post with executable code.</p>
+<section id="resumo" class="level2">
+<h2 class="anchored" data-anchor-id="resumo">Resumo</h2>
+<p>Nesta tarefa foi aplicada a técnica de <strong>regressão linear</strong> para analisar a relação entre os <strong>anos de estudo (X)</strong> e o <strong>salário (y)</strong>.<br>
+Os dados são carregados de arquivos <code>.txt</code> e os coeficientes são calculados manualmente com a <strong>fórmula matricial</strong>.<br>
+O gráfico gerado com <strong>Plotly</strong> mostra a linha estimada sobre os pontos dos dados.</p>
+<hr>
+</section>
+<section id="objetivo" class="level2">
+<h2 class="anchored" data-anchor-id="objetivo">Objetivo</h2>
+<p>Calcular os coeficientes da regressão linear por meio da fórmula matricial e exibir o gráfico resultante.</p>
+<hr>
+</section>
+<section id="código-em-python" class="level2">
+<h2 class="anchored" data-anchor-id="código-em-python">Código em Python</h2>
 
 
+</section>
 
  ]]></description>
-  <category>news</category>
-  <category>code</category>
-  <category>analysis</category>
-  <guid>https://your-website-url.example.com/posts/post-with-code/</guid>
-  <pubDate>Mon, 10 Nov 2025 03:00:00 GMT</pubDate>
-  <media:content url="https://your-website-url.example.com/posts/post-with-code/image.jpg" medium="image" type="image/jpeg"/>
+  <category>Python</category>
+  <category>Matemática</category>
+  <category>Plotly</category>
+  <guid>https://your-website-url.example.com/posts/Regressao_linear/</guid>
+  <pubDate>Thu, 13 Nov 2025 03:00:00 GMT</pubDate>
+  <media:content url="https://your-website-url.example.com/images/regressao.png" medium="image" type="image/png"/>
 </item>
 <item>
-  <title>Welcome To My Blog</title>
-  <dc:creator>Tristan O&#39;Malley</dc:creator>
-  <link>https://your-website-url.example.com/posts/welcome/</link>
+  <title>Cotação do Dólar por Período</title>
+  <link>https://your-website-url.example.com/posts/cotacao_dolar/</link>
   <description><![CDATA[ 
 
 
 
 
 
-<p>This is the first post in a Quarto blog. Welcome!</p>
-<p><img src="https://your-website-url.example.com/posts/welcome/thumbnail.jpg" class="img-fluid"></p>
-<p>Since this post doesn’t specify an explicit <code>image</code>, the first image in the post will be used in the listing page of posts.</p>
+<section id="resumo" class="level2">
+<h2 class="anchored" data-anchor-id="resumo">Resumo</h2>
+<p>Nesta atividade foi desenvolvida uma rotina em <strong>Python</strong> que consulta a <strong>API do Banco Central (PTAX)</strong> para obter a cotação do dólar em um período específico.<br>
+A função recebe uma string no formato <code>"MMYYYY"</code> e determina automaticamente as datas inicial e final do mês.<br>
+Os dados são processados com <strong>Pandas</strong> e visualizados em um <strong>gráfico de linha interativo com Plotly</strong>.</p>
+<hr>
+</section>
+<section id="objetivo" class="level2">
+<h2 class="anchored" data-anchor-id="objetivo">Objetivo</h2>
+<p>Criar uma rotina que receba como parâmetro <code>"MMYYYY"</code> e gere um gráfico com a cotação do dólar no período correspondente.</p>
+<hr>
+</section>
+<section id="código-em-python" class="level2">
+<h2 class="anchored" data-anchor-id="código-em-python">Código em Python</h2>
+<p>```python import requests import pandas as pd import plotly.express as px import calendar from datetime import datetime</p>
+<p>def cotacao_dolar(mmyyyy): first_date = datetime.strptime(mmyyyy, “%m%Y”) last_date = first_date.replace(day=calendar.monthrange(first_date.year, first_date.month)[1])</p>
+<pre><code>url = (f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/"
+       f"CotacaoDolarPeriodo(dataInicial=@dataInicial,dataFinalCotacao=@dataFinalCotacao)?"
+       f"@dataInicial='{first_date:%m-%d-%Y}'&amp;@dataFinalCotacao='{last_date:%m-%d-%Y}'&amp;"
+       "$format=json")
+
+r = requests.get(url)
+dados = r.json()["value"]
+df = pd.DataFrame(dados)
+df["dataHoraCotacao"] = pd.to_datetime(df["dataHoraCotacao"])
+
+fig = px.line(df, x="dataHoraCotacao", y="cotacaoVenda",
+              title="Cotação do Dólar - " + mmyyyy)
+fig.show()</code></pre>
+<p>cotacao_dolar(“082021”)</p>
 
 
+</section>
 
  ]]></description>
-  <category>news</category>
-  <guid>https://your-website-url.example.com/posts/welcome/</guid>
-  <pubDate>Fri, 07 Nov 2025 03:00:00 GMT</pubDate>
+  <category>Python</category>
+  <category>API</category>
+  <category>Plotly</category>
+  <guid>https://your-website-url.example.com/posts/cotacao_dolar/</guid>
+  <pubDate>Wed, 12 Nov 2025 03:00:00 GMT</pubDate>
+  <media:content url="https://your-website-url.example.com/images/dolar.png" medium="image" type="image/png"/>
+</item>
+<item>
+  <title>Monitoramento de Frota de Ônibus</title>
+  <link>https://your-website-url.example.com/posts/Monitoramento_frota/</link>
+  <description><![CDATA[ 
+
+
+
+
+
+<section id="resumo" class="level2">
+<h2 class="anchored" data-anchor-id="resumo">Resumo</h2>
+<p>O objetivo desta atividade foi construir um <strong>mapa interativo</strong> com as <strong>paradas de uma linha de ônibus</strong> e as <strong>posições em tempo real dos veículos</strong>.<br>
+A aplicação consulta uma <strong>API pública de transporte</strong>, utilizando um <strong>token de acesso</strong>, e exibe as informações em um mapa interativo com <strong>pins coloridos diferentes</strong> para paradas e ônibus.</p>
+<hr>
+</section>
+<section id="objetivo" class="level2">
+<h2 class="anchored" data-anchor-id="objetivo">🧠 Objetivo</h2>
+<p>Visualizar no mapa tanto as paradas fixas quanto os ônibus em movimento de uma linha específica.</p>
+<hr>
+</section>
+<section id="código-em-python" class="level2">
+<h2 class="anchored" data-anchor-id="código-em-python">Código em Python</h2>
+
+
+</section>
+
+ ]]></description>
+  <category>Python</category>
+  <category>API</category>
+  <category>Mapas</category>
+  <guid>https://your-website-url.example.com/posts/Monitoramento_frota/</guid>
+  <pubDate>Tue, 11 Nov 2025 03:00:00 GMT</pubDate>
+  <media:content url="https://your-website-url.example.com/images/onibus.png" medium="image" type="image/png"/>
 </item>
 </channel>
 </rss>

@@ -9,9 +9,9 @@ website:
     right:
       - about.qmd
       - icon: github
-        href: https://github.com/
-      - icon: twitter
-        href: https://twitter.com
+        href: https://github.com/IsabellaMatsumoto
+      - icon: linkedin
+        href: https://www.linkedin.com/in/isabella-matsumoto/
 format:
   html:
     theme:

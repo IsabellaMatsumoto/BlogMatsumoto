@@ -1,0 +1,50 @@
+---
+title: "Cotação do Dólar por Período"
+date: 2025-11-12
+image: /images/dolar.png
+description: "Consulta à API do Banco Central para gerar um gráfico de cotação do dólar."
+categories: [Python, API, Plotly]
+---
+
+## Resumo
+
+Nesta atividade foi desenvolvida uma rotina em **Python** que consulta a **API do Banco Central (PTAX)** para obter a cotação do dólar em um período específico.  
+A função recebe uma string no formato `"MMYYYY"` e determina automaticamente as datas inicial e final do mês.  
+Os dados são processados com **Pandas** e visualizados em um **gráfico de linha interativo com Plotly**.
+
+---
+
+## Objetivo
+
+Criar uma rotina que receba como parâmetro `"MMYYYY"` e gere um gráfico com a cotação do dólar no período correspondente.
+
+---
+
+## Código em Python
+
+```python
+import requests
+import pandas as pd
+import plotly.express as px
+import calendar
+from datetime import datetime
+
+def cotacao_dolar(mmyyyy):
+    first_date = datetime.strptime(mmyyyy, "%m%Y")
+    last_date = first_date.replace(day=calendar.monthrange(first_date.year, first_date.month)[1])
+    
+    url = (f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/"
+           f"CotacaoDolarPeriodo(dataInicial=@dataInicial,dataFinalCotacao=@dataFinalCotacao)?"
+           f"@dataInicial='{first_date:%m-%d-%Y}'&@dataFinalCotacao='{last_date:%m-%d-%Y}'&"
+           "$format=json")
+    
+    r = requests.get(url)
+    dados = r.json()["value"]
+    df = pd.DataFrame(dados)
+    df["dataHoraCotacao"] = pd.to_datetime(df["dataHoraCotacao"])
+    
+    fig = px.line(df, x="dataHoraCotacao", y="cotacaoVenda",
+                  title="Cotação do Dólar - " + mmyyyy)
+    fig.show()
+
+cotacao_dolar("082021")

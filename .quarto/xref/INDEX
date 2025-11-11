@@ -10,5 +10,14 @@
   },
   "posts/welcome/index.qmd": {
     "index.html": "5a69315f"
+  },
+  "posts/cotacao_dolar/index.qmd": {
+    "index.html": "7c47c6e6"
+  },
+  "posts/Monitoramento_frota/index.qmd": {
+    "index.html": "625122b9"
+  },
+  "posts/Regressao_linear/index.qmd": {
+    "index.html": "2d59a56f"
   }
 }

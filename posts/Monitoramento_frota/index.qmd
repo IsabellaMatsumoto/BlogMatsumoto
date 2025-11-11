@@ -1,0 +1,23 @@
+---
+title: "Monitoramento de Frota de Ônibus"
+date: 2025-11-11
+image: /images/onibus.png
+description: "Mapa interativo com paradas e posições em tempo real de ônibus."
+categories: [Python, API, Mapas]
+---
+
+## Resumo
+
+O objetivo desta atividade foi construir um **mapa interativo** com as **paradas de uma linha de ônibus** e as **posições em tempo real dos veículos**.  
+A aplicação consulta uma **API pública de transporte**, utilizando um **token de acesso**, e exibe as informações em um mapa interativo com **pins coloridos diferentes** para paradas e ônibus.
+
+---
+
+## 🧠 Objetivo
+
+Visualizar no mapa tanto as paradas fixas quanto os ônibus em movimento de uma linha específica.
+
+---
+
+## Código em Python
+

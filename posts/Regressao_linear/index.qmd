@@ -1,0 +1,24 @@
+---
+title: "Regressão Linear"
+date: 2025-11-13
+image: /images/regressao.png
+description: "Análise da relação entre anos de estudo e salário utilizando regressão linear."
+categories: [Python, Matemática, Plotly]
+---
+
+## Resumo
+
+Nesta tarefa foi aplicada a técnica de **regressão linear** para analisar a relação entre os **anos de estudo (X)** e o **salário (y)**.  
+Os dados são carregados de arquivos `.txt` e os coeficientes são calculados manualmente com a **fórmula matricial**.  
+O gráfico gerado com **Plotly** mostra a linha estimada sobre os pontos dos dados.
+
+---
+
+## Objetivo
+
+Calcular os coeficientes da regressão linear por meio da fórmula matricial e exibir o gráfico resultante.
+
+---
+
+## Código em Python
+
