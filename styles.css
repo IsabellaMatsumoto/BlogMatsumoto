@@ -1,0 +1,18 @@
+/* css styles */
+
+.listing {
+  margin-top: 40px; /* você pode ajustar o valor (20px, 60px, etc.) */
+}
+
+.listing .quarto-post a.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Efeito hover bonito */
+.listing .quarto-post a.card:hover {
+  transform: translateY(-4px);
+  transition: 0.2s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}

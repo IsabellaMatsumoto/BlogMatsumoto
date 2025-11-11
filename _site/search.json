@@ -1,0 +1,37 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Isabella Matsumoto",
+    "section": "",
+    "text": "Bem-vindo(a) ao BlogMatsumoto, um espaço para compartilhar ideias, projetos e aprendizados sobre TI, engenharia da computação, design e curiosidades do mundo tech"
+  },
+  {
+    "objectID": "posts/post-with-code/index.html",
+    "href": "posts/post-with-code/index.html",
+    "title": "Post With Code",
+    "section": "",
+    "text": "This is a post with executable code."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Isabella Matsumoto",
+    "section": "",
+    "text": "Este espaço foi criado para compartilhar meus trabalhos e projetos desenvolvidos ao longo da minha jornada em Engenharia da Computação e Tecnologia da Informação.\nAqui você vai encontrar publicações sobre programação, design, desenvolvimento de sites e outras áreas que fazem parte do meu aprendizado.\nO objetivo do blog é funcionar como um portfólio digital, mostrando minha evolução, ideias e experiências em cada projeto"
+  },
+  {
+    "objectID": "posts/welcome/index.html",
+    "href": "posts/welcome/index.html",
+    "title": "Welcome To My Blog",
+    "section": "",
+    "text": "This is the first post in a Quarto blog. Welcome!\n\nSince this post doesn’t specify an explicit image, the first image in the post will be used in the listing page of posts."
+  },
+  {
+    "objectID": "index.html#últimos-posts",
+    "href": "index.html#últimos-posts",
+    "title": "Isabella Matsumoto",
+    "section": "Últimos posts",
+    "text": "Últimos posts"
+  }
+]
