@@ -99,12 +99,12 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Sobre</span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://github.com/"> <i class="bi bi-github" role="img">
+    <a class="nav-link" href="https://github.com/IsabellaMatsumoto"> <i class="bi bi-github" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
   <li class="nav-item compact">
-    <a class="nav-link" href="https://twitter.com"> <i class="bi bi-twitter" role="img">
+    <a class="nav-link" href="https://www.linkedin.com/in/isabella-matsumoto/"> <i class="bi bi-linkedin" role="img">
 </i> 
 <span class="menu-text"></span></a>
   </li>  
@@ -173,22 +173,57 @@ Os dados são processados com <strong>Pandas</strong> e visualizados em um <stro
 </section>
 <section id="código-em-python" class="level2">
 <h2 class="anchored" data-anchor-id="código-em-python">Código em Python</h2>
-<p>```python import requests import pandas as pd import plotly.express as px import calendar from datetime import datetime</p>
-<p>def cotacao_dolar(mmyyyy): first_date = datetime.strptime(mmyyyy, “%m%Y”) last_date = first_date.replace(day=calendar.monthrange(first_date.year, first_date.month)[1])</p>
-<pre><code>url = (f"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/"
-       f"CotacaoDolarPeriodo(dataInicial=@dataInicial,dataFinalCotacao=@dataFinalCotacao)?"
-       f"@dataInicial='{first_date:%m-%d-%Y}'&amp;@dataFinalCotacao='{last_date:%m-%d-%Y}'&amp;"
-       "$format=json")
+<p>O código completo pode ser visto <a href="dolar.py">aqui</a>. Gráfico <a href="grafico_dolar.html">aqui</a>.</p>
+<hr>
+</section>
+<section id="resultado" class="level2">
+<h2 class="anchored" data-anchor-id="resultado">Resultado</h2>
+<p>#| echo: false #| fig-cap: “Cotação do Dólar em Agosto de 2021” import requests import pandas as pd import plotly.express as px import calendar from datetime import datetime</p>
+<pre><code>def cotacao_dolar_periodo(mes_ano: str):
+    # Converte string "MMYYYY" em datas inicial e final
+    first_date = datetime.strptime(mes_ano, "%m%Y")
+    last_day = calendar.monthrange(first_date.year, first_date.month)[1]
 
-r = requests.get(url)
-dados = r.json()["value"]
-df = pd.DataFrame(dados)
-df["dataHoraCotacao"] = pd.to_datetime(df["dataHoraCotacao"])
+    data_inicial = first_date.strftime("%m-%d-%Y")
+    data_final = first_date.replace(day=last_day).strftime("%m-%d-%Y")
 
-fig = px.line(df, x="dataHoraCotacao", y="cotacaoVenda",
-              title="Cotação do Dólar - " + mmyyyy)
-fig.show()</code></pre>
-<p>cotacao_dolar(“082021”)</p>
+    print(data_inicial, data_final)
+
+    # Monta a URL da API
+    url = (
+        "https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/"
+        f"CotacaoDolarPeriodo(dataInicial=@dataInicial,dataFinalCotacao=@dataFinalCotacao)?"
+        f"@dataInicial='{data_inicial}'&amp;@dataFinalCotacao='{data_final}'&amp;"
+        "$top=1000&amp;$format=json&amp;$select=cotacaoCompra,dataHoraCotacao"
+    )
+
+    # Faz a requisição
+    r = requests.get(url)
+    if r.status_code != 200:
+        raise Exception("Erro ao acessar a API do Banco Central")
+
+    dados = r.json().get("value", [])
+    if not dados:
+        raise Exception("Nenhum dado retornado pela API")
+
+    # Converte para DataFrame
+    df = pd.DataFrame(dados)
+    df["dataHoraCotacao"] = pd.to_datetime(df["dataHoraCotacao"])
+    df = df.sort_values("dataHoraCotacao")
+
+    # Cria o gráfico
+    fig = px.line(
+        df,
+        x="dataHoraCotacao",
+        y="cotacaoCompra",
+        title=f"Cotação do Dólar - {first_date.strftime('%B de %Y')}",
+        labels={"dataHoraCotacao": "Data", "cotacaoCompra": "Cotação (R$)"}
+    )
+    fig.write_html("grafico_dolar.html")
+    print("Gráfico salvo em grafico_dolar.html — abra no navegador.")
+
+if __name__ == "__main__":
+    cotacao_dolar_periodo("082021")</code></pre>
 
 
 </section>
