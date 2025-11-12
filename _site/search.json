@@ -16,7 +16,7 @@
   {
     "objectID": "about.html",
     "href": "about.html",
-    "title": "Isabella Matsumoto",
+    "title": "Sobre",
     "section": "",
     "text": "Este espaço foi criado para compartilhar meus trabalhos e projetos desenvolvidos ao longo da minha jornada em Engenharia da Computação e Tecnologia da Informação.\nAqui você vai encontrar publicações sobre programação, design, desenvolvimento de sites e outras áreas que fazem parte do meu aprendizado.\nO objetivo do blog é funcionar como um portfólio digital, mostrando minha evolução, ideias e experiências em cada projeto"
   },
@@ -123,7 +123,7 @@
     "href": "posts/Regressao_linear/index.html#código-em-python",
     "title": "Regressão Linear",
     "section": "Código em Python",
-    "text": "Código em Python"
+    "text": "Código em Python\nO código completo pode ser visto aqui. Rota aqui."
   },
   {
     "objectID": "posts/cotacao_dolar/index.html#resultado",
@@ -138,5 +138,12 @@
     "title": "Monitoramento de Frota de Ônibus",
     "section": "Código em Python",
     "text": "Código em Python\n#| echo: false #| fig-cap: “Monitoramento de frota de ônibus - Linha 875A-10 - VILA MARIANA ↔︎ AEROPORTO (CONGONHAS)”\nimport os\nimport requests\nimport folium\nfrom dotenv import load_dotenv\n\nload_dotenv(\".env\")\nTOKEN = os.getenv(\"SPTRANS_TOKEN\")\n\ns = requests.Session()\nauth = s.post(f\"http://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token={TOKEN}\")\n\nif auth.text.lower() != \"true\":\n    print(\"Falha na autenticação com o token SPTrans.\")\n    exit()\n\nlinha_nome = \"875A\"\nurl_linhas = f\"http://api.olhovivo.sptrans.com.br/v2.1/Linha/Buscar?termosBusca={linha_nome}\"\nres_linhas = s.get(url_linhas)\nlinhas = res_linhas.json()\n\nif not linhas:\n    print(\"Nenhuma linha encontrada.\")\n    exit()\n\n#Exibe as direções disponíveis \nfor i, l in enumerate(linhas, start=1):\n    sentido = \"Ida\" if l[\"sl\"] == 1 else \"Volta\"\n    print(f\"{i}. {l['lt']} - {l['tp']} → {l['ts']} ({sentido}) | Código: {l['cl']}\")\n\n# Usa a primeira linha \nlinha = linhas[0]\ncodigo_linha = linha[\"cl\"]\nsentido = linha[\"sl\"]\n\nprint(f\"\\nLinha selecionada: {linha['lt']} - {linha['tp']} → {linha['ts']} ({'Ida' if sentido == 1 else 'Volta'})\")\n\n# Buscar paradas da linha \nurl_paradas = f\"http://api.olhovivo.sptrans.com.br/v2.1/Parada/BuscarParadasPorLinha?codigoLinha={codigo_linha}&sentido={sentido}\"\nres_paradas = s.get(url_paradas)\nparadas = res_paradas.json()\n\nif not paradas:\n    print(\"Nenhuma parada encontrada para esta linha e sentido.\")\n    exit()\n\n# Criação do mapa \nmapa = folium.Map(location=[paradas[0][\"py\"], paradas[0][\"px\"]], zoom_start=13)\n\n# Pinos azuis = paradas\nfor parada in paradas:\n    folium.Marker(\n        [parada[\"py\"], parada[\"px\"]],\n        popup=parada[\"np\"],\n        icon=folium.Icon(color=\"blue\", icon=\"bus\", prefix=\"fa\")\n    ).add_to(mapa)\n\n# Posições em tempo real \nurl_posicoes = f\"http://api.olhovivo.sptrans.com.br/v2.1/Posicao?codigoLinha={codigo_linha}\"\nres_posicoes = s.get(url_posicoes)\ndados_posicao = res_posicoes.json()\n\nveiculos = []\nif dados_posicao and \"vs\" in dados_posicao:\n    veiculos = dados_posicao[\"vs\"]\n\n\nif veiculos:\n    for v in veiculos:\n        folium.Marker(\n            [v[\"py\"], v[\"px\"]],\n            popup=f\"Ônibus {v['p']}\",\n            icon=folium.Icon(color=\"red\", icon=\"location-dot\", prefix=\"fa\")\n        ).add_to(mapa)\nelse:\n    print(\" Nenhum ônibus encontrado em tempo real no momento.\")\n\n#Linha 875A-10 - VILA MARIANA ↔ AEROPORTO (CONGONHAS)\nmapa.save(\"mapa_frota_875A-10.html\")\nprint(\"Pinos azuis = paradas | Pinos vermelhos = ônibus em tempo real\")"
+  },
+  {
+    "objectID": "posts/Regressao_linear/index.html#código-em-python-1",
+    "href": "posts/Regressao_linear/index.html#código-em-python-1",
+    "title": "Regressão Linear",
+    "section": "Código em Python",
+    "text": "Código em Python\n#| echo: false #| fig-cap: “Monitoramento de frota de ônibus - Linha 875A-10 - VILA MARIANA ↔︎ AEROPORTO (CONGONHAS)” import numpy as np import plotly.graph_objects as go\n# Ler os dados dos arquivos\nX = np.loadtxt(\"x.txt\")  # anos de estudo\ny = np.loadtxt(\"y.txt\")  # salário\n\n# Montar a matriz X com coluna de 1s\nX_matriz = np.column_stack((np.ones(len(X)), X))\n\n# Calcular os coeficientes a e b com a fórmula matricial\nbeta = np.linalg.inv(X_matriz.T @ X_matriz) @ X_matriz.T @ y\na, b = beta[0], beta[1]\n\nprint(f\"a (intercepto): {a:.4f}\")\nprint(f\"b (inclinação): {b:.4f}\")\n\n# Calcular valores previstos (reta estimada)\ny_pred = a + b * X\n\n# Calcular o R² (coeficiente de determinação)\nss_res = np.sum((y - y_pred) ** 2)\nss_tot = np.sum((y - np.mean(y)) ** 2)\nr2 = 1 - (ss_res / ss_tot)\n\nprint(f\"R²: {r2:.4f}\")\n\n# Criar o gráfico com Plotly\nfig = go.Figure()\n\n# Pontos reais\nfig.add_trace(go.Scatter(\n    x=X, y=y,\n    mode=\"markers\",\n    name=\"Dados reais\",\n    marker=dict(color=\"blue\", size=8)\n))\n\n# Reta estimada\nfig.add_trace(go.Scatter(\n    x=X, y=y_pred,\n    mode=\"lines\",\n    name=\"Reta estimada\",\n    line=dict(color=\"red\", width=3)\n))\n\n# Layout do gráfico\nfig.update_layout(\n    title=f\"Relação entre Anos de Estudo e Salário&lt;br&gt;a={a:.4f}, b={b:.4f}, R²={r2:.4f}\",\n    xaxis_title=\"Anos de Estudo\",\n    yaxis_title=\"Salário (R$)\",\n    template=\"plotly_white\"\n)\n\n# Salvar o gráfico em HTML\nfig.write_html(\"regressao_linear.html\")\nprint(\"Gráfico salvo como regressao_linear.html — abra no navegador para visualizar.\")"
   }
 ]
