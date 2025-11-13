@@ -27,7 +27,7 @@ for i, l in enumerate(linhas, start=1):
     sentido = "Ida" if l["sl"] == 1 else "Volta"
     print(f"{i}. {l['lt']} - {l['tp']} → {l['ts']} ({sentido}) | Código: {l['cl']}")
 
-# Usa a primeira linha 
+
 linha = linhas[0]
 codigo_linha = linha["cl"]
 sentido = linha["sl"]
@@ -76,4 +76,4 @@ else:
 
 #Linha 875A-10 - VILA MARIANA ↔ AEROPORTO (CONGONHAS)
 mapa.save("mapa_frota_875A-10.html")
-print("Pinos azuis = paradas | Pinos vermelhos = ônibus em tempo real")
+

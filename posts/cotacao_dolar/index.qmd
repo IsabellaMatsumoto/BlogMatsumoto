@@ -16,7 +16,7 @@ Os dados são processados com **Pandas** e visualizados em um **gráfico de linh
 
 ## Objetivo
 
-Criar uma rotina que receba como parâmetro `"MMYYYY"` e gere um gráfico com a cotação do dólar no período correspondente.
+Criar uma código que receba como parâmetro `"MMYYYY"` e gere um gráfico com a cotação do dólar no período correspondente.
 
 ---
 
@@ -31,7 +31,7 @@ Gráfico [aqui](grafico_dolar.html).
 
 ```{python}
 #| echo: false
-#| fig-cap: "Cotação do Dólar em Agosto de 2021"
+#| fig-cap: "Cotação do Dólar em Agosto de 2025"
 import requests
 import pandas as pd
 import plotly.express as px
@@ -83,5 +83,5 @@ from datetime import datetime
         print("Gráfico salvo em grafico_dolar.html — abra no navegador.")
 
     if __name__ == "__main__":
-        cotacao_dolar_periodo("082021")
+        cotacao_dolar_periodo("082025")
 

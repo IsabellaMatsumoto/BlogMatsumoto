@@ -243,7 +243,7 @@ Os dados são processados com <strong>Pandas</strong> e visualizados em um <stro
 </section>
 <section id="objetivo" class="level2">
 <h2 class="anchored" data-anchor-id="objetivo">Objetivo</h2>
-<p>Criar uma rotina que receba como parâmetro <code>"MMYYYY"</code> e gere um gráfico com a cotação do dólar no período correspondente.</p>
+<p>Criar uma código que receba como parâmetro <code>"MMYYYY"</code> e gere um gráfico com a cotação do dólar no período correspondente.</p>
 <hr>
 </section>
 <section id="código-em-python" class="level2">
@@ -253,7 +253,7 @@ Os dados são processados com <strong>Pandas</strong> e visualizados em um <stro
 </section>
 <section id="resultado" class="level2">
 <h2 class="anchored" data-anchor-id="resultado">Resultado</h2>
-<p>#| echo: false #| fig-cap: “Cotação do Dólar em Agosto de 2021” import requests import pandas as pd import plotly.express as px import calendar from datetime import datetime</p>
+<p>#| echo: false #| fig-cap: “Cotação do Dólar em Agosto de 2025” import requests import pandas as pd import plotly.express as px import calendar from datetime import datetime</p>
 <pre><code>def cotacao_dolar_periodo(mes_ano: str):
     # Converte string "MMYYYY" em datas inicial e final
     first_date = datetime.strptime(mes_ano, "%m%Y")
@@ -298,7 +298,7 @@ Os dados são processados com <strong>Pandas</strong> e visualizados em um <stro
     print("Gráfico salvo em grafico_dolar.html — abra no navegador.")
 
 if __name__ == "__main__":
-    cotacao_dolar_periodo("082021")</code></pre>
+    cotacao_dolar_periodo("082025")</code></pre>
 
 
 </section>

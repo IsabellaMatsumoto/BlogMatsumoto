@@ -50,5 +50,5 @@ def cotacao_dolar_periodo(mes_ano: str):
 
 # Exemplo de uso
 if __name__ == "__main__":
-    cotacao_dolar_periodo("082021")
+    cotacao_dolar_periodo("082025")
 
