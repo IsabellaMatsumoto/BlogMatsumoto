@@ -162,22 +162,35 @@ ul.task-list li input[type="checkbox"] {
 <section id="resumo" class="level2">
 <h2 class="anchored" data-anchor-id="resumo">Resumo</h2>
 <p>O objetivo desta atividade foi construir um <strong>mapa interativo</strong> com as <strong>paradas de uma linha de ônibus</strong> e as <strong>posições em tempo real dos veículos</strong>.<br>
-A aplicação consulta uma <strong>API pública de transporte</strong>, utilizando um <strong>token de acesso</strong>, e exibe as informações em um mapa interativo com <strong>pins coloridos diferentes</strong> para paradas e ônibus.</p>
+A aplicação consulta a <strong>API Olho Vivo (SPTrans)</strong>, utiliza um <strong>token de autenticação</strong> e exibe no mapa duas camadas:<br>
+- <strong>Paradas (pinos azuis)</strong><br>
+- <strong>Ônibus em tempo real (pinos vermelhos)</strong></p>
+<p>O resultado final é um mapa dinâmico que facilita visualizar a operação da linha.</p>
 <hr>
 </section>
 <section id="objetivo" class="level2">
 <h2 class="anchored" data-anchor-id="objetivo">Objetivo</h2>
-<p>Visualizar no mapa tanto as paradas fixas quanto os ônibus em movimento de uma linha específica.</p>
+<p>Representar no mapa tanto as paradas fixas quanto os ônibus em movimento de uma linha específica.</p>
+<hr>
+</section>
+<section id="como-pensei-explicação-curta" class="level2">
+<h2 class="anchored" data-anchor-id="como-pensei-explicação-curta">Como pensei (explicação curta)</h2>
+<p>Comecei carregando o token do arquivo <code>.env</code> e autenticando na API usando <code>requests.Session</code>, pois essa API exige manter a sessão válida após o login.<br>
+Em seguida busquei a linha pelo nome (“875A”), já que a API retorna o <strong>código interno da linha</strong>, que é necessário para consultar paradas e posições.</p>
+<p>Com o código e o sentido retornados, fiz a requisição das paradas e utilizei suas coordenadas para criar um mapa com o <strong>Folium</strong>, adicionando um pino azul para cada parada.<br>
+Depois consultei o endpoint de posição e, se houvesse ônibus circulando, adicionei pinos vermelhos mostrando o veículo e sua localização atual.</p>
+<p>Por fim salvei tudo em um arquivo HTML, permitindo visualizar paradas + frota em tempo real diretamente no navegador.</p>
 <hr>
 </section>
 <section id="código-em-python" class="level2">
 <h2 class="anchored" data-anchor-id="código-em-python">Código em Python</h2>
-<p>O código completo pode ser visto <a href="frota_onibus.py">aqui</a>. Rota <a href="mapa_frota_875A-10.html">aqui</a>.</p>
+<p>O código completo <a href="frota_onibus.py">aqui</a>.<br>
+Rota gerada no mapa: <a href="mapa_frota_875A-10.html">mapa_frota_875A-10</a>.</p>
 <hr>
 </section>
 <section id="código-em-python-1" class="level2">
 <h2 class="anchored" data-anchor-id="código-em-python-1">Código em Python</h2>
-<p>#| echo: false #| fig-cap: “Monitoramento de frota de ônibus - Linha 875A-10 - VILA MARIANA ↔︎ AEROPORTO (CONGONHAS)”</p>
+<p>#| echo: false #| fig-cap: “Monitoramento de frota de ônibus - Linha 875A-10 - Perdizes ↔︎ Aeroporto de Congonhas (via Av. Washington Luiz, Av. Jabaquara)”</p>
 <pre><code>import os
 import requests
 import folium
@@ -202,19 +215,19 @@ if not linhas:
     print("Nenhuma linha encontrada.")
     exit()
 
-#Exibe as direções disponíveis 
+# Exibe as direções disponíveis
 for i, l in enumerate(linhas, start=1):
     sentido = "Ida" if l["sl"] == 1 else "Volta"
     print(f"{i}. {l['lt']} - {l['tp']} → {l['ts']} ({sentido}) | Código: {l['cl']}")
 
-# Usa a primeira linha 
+# Usa a primeira linha retornada
 linha = linhas[0]
 codigo_linha = linha["cl"]
 sentido = linha["sl"]
 
 print(f"\nLinha selecionada: {linha['lt']} - {linha['tp']} → {linha['ts']} ({'Ida' if sentido == 1 else 'Volta'})")
 
-# Buscar paradas da linha 
+# Buscar paradas da linha
 url_paradas = f"http://api.olhovivo.sptrans.com.br/v2.1/Parada/BuscarParadasPorLinha?codigoLinha={codigo_linha}&amp;sentido={sentido}"
 res_paradas = s.get(url_paradas)
 paradas = res_paradas.json()
@@ -223,7 +236,7 @@ if not paradas:
     print("Nenhuma parada encontrada para esta linha e sentido.")
     exit()
 
-# Criação do mapa 
+# Criação do mapa
 mapa = folium.Map(location=[paradas[0]["py"], paradas[0]["px"]], zoom_start=13)
 
 # Pinos azuis = paradas
@@ -234,7 +247,7 @@ for parada in paradas:
         icon=folium.Icon(color="blue", icon="bus", prefix="fa")
     ).add_to(mapa)
 
-# Posições em tempo real 
+# Posições em tempo real
 url_posicoes = f"http://api.olhovivo.sptrans.com.br/v2.1/Posicao?codigoLinha={codigo_linha}"
 res_posicoes = s.get(url_posicoes)
 dados_posicao = res_posicoes.json()
@@ -243,7 +256,7 @@ veiculos = []
 if dados_posicao and "vs" in dados_posicao:
     veiculos = dados_posicao["vs"]
 
-
+# Pinos vermelhos = ônibus
 if veiculos:
     for v in veiculos:
         folium.Marker(
@@ -252,9 +265,9 @@ if veiculos:
             icon=folium.Icon(color="red", icon="location-dot", prefix="fa")
         ).add_to(mapa)
 else:
-    print(" Nenhum ônibus encontrado em tempo real no momento.")
+    print("Nenhum ônibus encontrado em tempo real no momento.")
 
-#Linha 875A-10 - VILA MARIANA ↔ AEROPORTO (CONGONHAS)
+# Linha 875A-10 - Perdizes ↔ Aeroporto de Congonhas (via Av. Washington Luiz, Av. Jabaquara) 
 mapa.save("mapa_frota_875A-10.html")
 print("Pinos azuis = paradas | Pinos vermelhos = ônibus em tempo real")</code></pre>
 

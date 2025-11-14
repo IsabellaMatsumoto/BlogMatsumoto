@@ -46,9 +46,8 @@ def cotacao_dolar_periodo(mes_ano: str):
         labels={"dataHoraCotacao": "Data", "cotacaoCompra": "Cotação (R$)"}
     )
     fig.write_html("grafico_dolar.html")
-    print("Gráfico salvo em grafico_dolar.html — abra no navegador.")
+    print("Gráfico salvo em grafico_dolar.html.")
 
-# Exemplo de uso
 if __name__ == "__main__":
     cotacao_dolar_periodo("082025")
 

@@ -16,13 +16,19 @@ Os dados são processados com **Pandas** e visualizados em um **gráfico de linh
 
 ## Objetivo
 
-Criar uma código que receba como parâmetro `"MMYYYY"` e gere um gráfico com a cotação do dólar no período correspondente.
+Criar um código que receba como parâmetro `"MMYYYY"` e gere um gráfico com a cotação do dólar no período correspondente.
+
+---
+
+## Como pensei 
+
+Primeiro converti a string `"MMYYYY"` em um objeto `datetime` para obter o ano e o mês. Usei o `calendar.monthrange` para descobrir o último dia do mês e assim montar as datas inicial e final exigidas pela API. Em seguida fiz a requisição, transformei o JSON em `DataFrame` para ordenar e tratar as datas, e finalmente plotei a série temporal com `plotly.express`. Salvei o gráfico como `grafico_dolar.html` para facilitar a visualização no blog.
 
 ---
 
 ## Código em Python
 
-O código completo pode ser visto [aqui](dolar.py).
+O código completo pode ser visto [aqui](dolar.py).  
 Gráfico [aqui](grafico_dolar.html).
 
 ---
@@ -32,11 +38,11 @@ Gráfico [aqui](grafico_dolar.html).
 ```{python}
 #| echo: false
 #| fig-cap: "Cotação do Dólar em Agosto de 2025"
-import requests
-import pandas as pd
-import plotly.express as px
-import calendar
-from datetime import datetime
+    import requests
+    import pandas as pd
+    import plotly.express as px
+    import calendar
+    from datetime import datetime
 
 
     def cotacao_dolar_periodo(mes_ano: str):
@@ -46,8 +52,6 @@ from datetime import datetime
 
         data_inicial = first_date.strftime("%m-%d-%Y")
         data_final = first_date.replace(day=last_day).strftime("%m-%d-%Y")
-
-        print(data_inicial, data_final)
 
         # Monta a URL da API
         url = (
@@ -82,6 +86,4 @@ from datetime import datetime
         fig.write_html("grafico_dolar.html")
         print("Gráfico salvo em grafico_dolar.html — abra no navegador.")
 
-    if __name__ == "__main__":
-        cotacao_dolar_periodo("082025")
-
+    cotacao_dolar_periodo("082025")

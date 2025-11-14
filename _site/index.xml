@@ -24,76 +24,131 @@
 <h2 class="anchored" data-anchor-id="resumo">Resumo</h2>
 <p>Nesta tarefa foi aplicada a técnica de <strong>regressão linear</strong> para analisar a relação entre os <strong>anos de estudo (X)</strong> e o <strong>salário (y)</strong>.<br>
 Os dados são carregados de arquivos <code>.txt</code> e os coeficientes são calculados manualmente com a <strong>fórmula matricial</strong>.<br>
-O gráfico gerado com <strong>Plotly</strong> mostra a linha estimada sobre os pontos dos dados.</p>
+Foram utilizados dois métodos de visualização: <strong>plotnine (matplotlib/ggplot-style)</strong> e <strong>Plotly (interativo)</strong>.</p>
 <hr>
 </section>
 <section id="objetivo" class="level2">
 <h2 class="anchored" data-anchor-id="objetivo">Objetivo</h2>
-<p>Calcular os coeficientes da regressão linear por meio da fórmula matricial e exibir o gráfico resultante.</p>
+<p>Calcular os coeficientes da regressão linear por meio da fórmula matricial e exibir o gráfico resultante utilizando duas bibliotecas diferentes.</p>
 <hr>
+</section>
+<section id="como-pensei" class="level2">
+<h2 class="anchored" data-anchor-id="como-pensei">Como pensei</h2>
+<p>Para resolver esse exercício eu trabalhei com duas abordagens.</p>
+<section id="código-usando-plotnine" class="level3">
+<h3 class="anchored" data-anchor-id="código-usando-plotnine">1. Código usando <code>plotnine</code></h3>
+<p>Nesse caso, a lógica da regressão já estava pronta no código base.<br>
+O que eu fiz foi <strong>adaptar a entrada dos dados</strong>:<br>
+- Removi valores fixos escritos diretamente no código<br>
+- Passei a carregar tudo usando <code>np.loadtxt("x.txt")</code> e <code>np.loadtxt("y.txt")</code></p>
+<hr>
+</section>
+<section id="código-usando-plotly" class="level3">
+<h3 class="anchored" data-anchor-id="código-usando-plotly">2. Código usando <code>Plotly</code></h3>
+<p>Aqui eu implementei <strong>todo o processo completo</strong>:<br>
+- carregar os dados<br>
+- montar a matriz X (com coluna de 1s)<br>
+- aplicar a <strong>fórmula matricial da regressão linear</strong><br>
+- calcular o R² manualmente<br>
+- gerar o gráfico interativo<br>
+- salvar em HTML</p>
+<p>Essa versão foi construída passo a passo a partir da matemática da regressão e resultou em um gráfico interativo.</p>
+<hr>
+</section>
 </section>
 <section id="código-em-python" class="level2">
 <h2 class="anchored" data-anchor-id="código-em-python">Código em Python</h2>
-<p>O código completo pode ser visto <a href="regressao.py">aqui</a>. Rota <a href="regressao_linear.html">aqui</a>.</p>
-<hr>
-</section>
-<section id="código-em-python-1" class="level2">
-<h2 class="anchored" data-anchor-id="código-em-python-1">Código em Python</h2>
-<p>#| echo: false #| fig-cap: “Monitoramento de frota de ônibus - Linha 875A-10 - VILA MARIANA ↔︎ AEROPORTO (CONGONHAS)” import numpy as np import plotly.graph_objects as go</p>
-<pre><code># Ler os dados dos arquivos
-X = np.loadtxt("x.txt")  # anos de estudo
-y = np.loadtxt("y.txt")  # salário
+<p>O código completo pode ser visto <a href="regressao2.py.py">aqui</a>.<br>
+Regressão Linear: <a href="grafico2.png">aqui</a>.</p>
+<p>#| echo: false #| fig-cap: “Regressão linear (Plotnine)”</p>
+<pre><code>import numpy as np
+from plotnine import (
+    ggplot, aes, geom_point, geom_abline, theme, element_text
+)
+import pandas as pd
 
-# Montar a matriz X com coluna de 1s
-X_matriz = np.column_stack((np.ones(len(X)), X))
+# Ler os arquivos
+valores_x = np.loadtxt("x.txt")
+valores_y = np.loadtxt("y.txt")
 
-# Calcular os coeficientes a e b com a fórmula matricial
-beta = np.linalg.inv(X_matriz.T @ X_matriz) @ X_matriz.T @ y
-a, b = beta[0], beta[1]
+# Calcular coeficientes da regressão
+X = np.column_stack((np.ones(len(valores_x)), valores_x))
+beta = np.linalg.inv(X.T @ X) @ X.T @ valores_y
 
-print(f"a (intercepto): {a:.4f}")
-print(f"b (inclinação): {b:.4f}")
+a = float(beta[0])   # intercepto
+b = float(beta[1])   # inclinação
 
-# Calcular valores previstos (reta estimada)
-y_pred = a + b * X
+print("a =", a)
+print("b =", b)
 
-# Calcular o R² (coeficiente de determinação)
-ss_res = np.sum((y - y_pred) ** 2)
-ss_tot = np.sum((y - np.mean(y)) ** 2)
-r2 = 1 - (ss_res / ss_tot)
+df = {"x": valores_x, "y": valores_y}
 
-print(f"R²: {r2:.4f}")
-
-# Criar o gráfico com Plotly
-fig = go.Figure()
-
-# Pontos reais
-fig.add_trace(go.Scatter(
-    x=X, y=y,
-    mode="markers",
-    name="Dados reais",
-    marker=dict(color="blue", size=8)
-))
-
-# Reta estimada
-fig.add_trace(go.Scatter(
-    x=X, y=y_pred,
-    mode="lines",
-    name="Reta estimada",
-    line=dict(color="red", width=3)
-))
-
-# Layout do gráfico
-fig.update_layout(
-    title=f"Relação entre Anos de Estudo e Salário&lt;br&gt;a={a:.4f}, b={b:.4f}, R²={r2:.4f}",
-    xaxis_title="Anos de Estudo",
-    yaxis_title="Salário (R$)",
-    template="plotly_white"
+plot = (
+    ggplot(pd.DataFrame(df), aes("x", "y"))
+    + geom_point()
+    + geom_abline(intercept=a, slope=b)
 )
 
-# Salvar o gráfico em HTML
-fig.write_html("regressao_linear.html")
-print("Gráfico salvo como regressao_linear.html — abra no navegador para visualizar.")</code></pre>
+plot.save("grafico2.png", dpi=300)
+
+print("Gráfico salvo como grafico2.png")</code></pre>
+</section>
+<section id="código-em-python-ploty" class="level2">
+<h2 class="anchored" data-anchor-id="código-em-python-ploty">Código em Python — Ploty</h2>
+<p>O código completo pode be visto <a href="regressao.py">aqui</a>.<br>
+Regressão Linear: <a href="grafico.html">aqui</a>.</p>
+<pre><code>import numpy as np
+import plotly.graph_objects as go
+from sklearn.linear_model import LinearRegression
+
+# Lê os dados dos arquivos
+x = np.loadtxt('x.txt')
+y = np.loadtxt('y.txt')
+
+# Ajusta o formato dos dados
+x = x.reshape(-1, 1)
+
+# Cria e treina o modelo de regressão
+modelo = LinearRegression()
+modelo.fit(x, y)
+
+# Faz previsões
+y_pred = modelo.predict(x)
+
+# Exibe os coeficientes
+a = modelo.coef_[0]
+b = modelo.intercept_
+print(f"Equação da reta: y = {a:.4f}x + {b:.4f}")
+
+# Cria o gráfico interativo
+fig = go.Figure()
+
+# Adiciona os pontos reais
+fig.add_trace(go.Scatter(
+    x=x.flatten(), y=y,
+    mode='markers',
+    name='Pontos reais',
+    marker=dict(color='blue', size=8)
+))
+
+# Adiciona a reta de regressão
+fig.add_trace(go.Scatter(
+    x=x.flatten(), y=y_pred,
+    mode='lines',
+    name='Reta de regressão',
+    line=dict(color='red', width=2)
+))
+
+# Configura layout
+fig.update_layout(
+    title='Regressão Linear',
+    xaxis_title='X',
+    yaxis_title='Y',
+    template='plotly_white'
+)
+
+# Salva o gráfico em HTML
+fig.write_html('grafico.html')</code></pre>
 
 
 </section>
@@ -104,7 +159,7 @@ print("Gráfico salvo como regressao_linear.html — abra no navegador para visu
   <category>Plotly</category>
   <guid>https://your-website-url.example.com/posts/Regressao_linear/</guid>
   <pubDate>Thu, 13 Nov 2025 03:00:00 GMT</pubDate>
-  <media:content url="https://your-website-url.example.com/posts/Regressao_linear/regressao.png" medium="image" type="image/png" height="70" width="144"/>
+  <media:content url="https://your-website-url.example.com/posts/Regressao_linear/grafico2.png" medium="image" type="image/png" height="108" width="144"/>
 </item>
 <item>
   <title>Monitoramento de Frota de Ônibus</title>
@@ -118,22 +173,35 @@ print("Gráfico salvo como regressao_linear.html — abra no navegador para visu
 <section id="resumo" class="level2">
 <h2 class="anchored" data-anchor-id="resumo">Resumo</h2>
 <p>O objetivo desta atividade foi construir um <strong>mapa interativo</strong> com as <strong>paradas de uma linha de ônibus</strong> e as <strong>posições em tempo real dos veículos</strong>.<br>
-A aplicação consulta uma <strong>API pública de transporte</strong>, utilizando um <strong>token de acesso</strong>, e exibe as informações em um mapa interativo com <strong>pins coloridos diferentes</strong> para paradas e ônibus.</p>
+A aplicação consulta a <strong>API Olho Vivo (SPTrans)</strong>, utiliza um <strong>token de autenticação</strong> e exibe no mapa duas camadas:<br>
+- <strong>Paradas (pinos azuis)</strong><br>
+- <strong>Ônibus em tempo real (pinos vermelhos)</strong></p>
+<p>O resultado final é um mapa dinâmico que facilita visualizar a operação da linha.</p>
 <hr>
 </section>
 <section id="objetivo" class="level2">
 <h2 class="anchored" data-anchor-id="objetivo">Objetivo</h2>
-<p>Visualizar no mapa tanto as paradas fixas quanto os ônibus em movimento de uma linha específica.</p>
+<p>Representar no mapa tanto as paradas fixas quanto os ônibus em movimento de uma linha específica.</p>
+<hr>
+</section>
+<section id="como-pensei-explicação-curta" class="level2">
+<h2 class="anchored" data-anchor-id="como-pensei-explicação-curta">Como pensei (explicação curta)</h2>
+<p>Comecei carregando o token do arquivo <code>.env</code> e autenticando na API usando <code>requests.Session</code>, pois essa API exige manter a sessão válida após o login.<br>
+Em seguida busquei a linha pelo nome (“875A”), já que a API retorna o <strong>código interno da linha</strong>, que é necessário para consultar paradas e posições.</p>
+<p>Com o código e o sentido retornados, fiz a requisição das paradas e utilizei suas coordenadas para criar um mapa com o <strong>Folium</strong>, adicionando um pino azul para cada parada.<br>
+Depois consultei o endpoint de posição e, se houvesse ônibus circulando, adicionei pinos vermelhos mostrando o veículo e sua localização atual.</p>
+<p>Por fim salvei tudo em um arquivo HTML, permitindo visualizar paradas + frota em tempo real diretamente no navegador.</p>
 <hr>
 </section>
 <section id="código-em-python" class="level2">
 <h2 class="anchored" data-anchor-id="código-em-python">Código em Python</h2>
-<p>O código completo pode ser visto <a href="frota_onibus.py">aqui</a>. Rota <a href="mapa_frota_875A-10.html">aqui</a>.</p>
+<p>O código completo <a href="frota_onibus.py">aqui</a>.<br>
+Rota gerada no mapa: <a href="mapa_frota_875A-10.html">mapa_frota_875A-10</a>.</p>
 <hr>
 </section>
 <section id="código-em-python-1" class="level2">
 <h2 class="anchored" data-anchor-id="código-em-python-1">Código em Python</h2>
-<p>#| echo: false #| fig-cap: “Monitoramento de frota de ônibus - Linha 875A-10 - VILA MARIANA ↔︎ AEROPORTO (CONGONHAS)”</p>
+<p>#| echo: false #| fig-cap: “Monitoramento de frota de ônibus - Linha 875A-10 - Perdizes ↔︎ Aeroporto de Congonhas (via Av. Washington Luiz, Av. Jabaquara)”</p>
 <pre><code>import os
 import requests
 import folium
@@ -158,19 +226,19 @@ if not linhas:
     print("Nenhuma linha encontrada.")
     exit()
 
-#Exibe as direções disponíveis 
+# Exibe as direções disponíveis
 for i, l in enumerate(linhas, start=1):
     sentido = "Ida" if l["sl"] == 1 else "Volta"
     print(f"{i}. {l['lt']} - {l['tp']} → {l['ts']} ({sentido}) | Código: {l['cl']}")
 
-# Usa a primeira linha 
+# Usa a primeira linha retornada
 linha = linhas[0]
 codigo_linha = linha["cl"]
 sentido = linha["sl"]
 
 print(f"\nLinha selecionada: {linha['lt']} - {linha['tp']} → {linha['ts']} ({'Ida' if sentido == 1 else 'Volta'})")
 
-# Buscar paradas da linha 
+# Buscar paradas da linha
 url_paradas = f"http://api.olhovivo.sptrans.com.br/v2.1/Parada/BuscarParadasPorLinha?codigoLinha={codigo_linha}&amp;sentido={sentido}"
 res_paradas = s.get(url_paradas)
 paradas = res_paradas.json()
@@ -179,7 +247,7 @@ if not paradas:
     print("Nenhuma parada encontrada para esta linha e sentido.")
     exit()
 
-# Criação do mapa 
+# Criação do mapa
 mapa = folium.Map(location=[paradas[0]["py"], paradas[0]["px"]], zoom_start=13)
 
 # Pinos azuis = paradas
@@ -190,7 +258,7 @@ for parada in paradas:
         icon=folium.Icon(color="blue", icon="bus", prefix="fa")
     ).add_to(mapa)
 
-# Posições em tempo real 
+# Posições em tempo real
 url_posicoes = f"http://api.olhovivo.sptrans.com.br/v2.1/Posicao?codigoLinha={codigo_linha}"
 res_posicoes = s.get(url_posicoes)
 dados_posicao = res_posicoes.json()
@@ -199,7 +267,7 @@ veiculos = []
 if dados_posicao and "vs" in dados_posicao:
     veiculos = dados_posicao["vs"]
 
-
+# Pinos vermelhos = ônibus
 if veiculos:
     for v in veiculos:
         folium.Marker(
@@ -208,9 +276,9 @@ if veiculos:
             icon=folium.Icon(color="red", icon="location-dot", prefix="fa")
         ).add_to(mapa)
 else:
-    print(" Nenhum ônibus encontrado em tempo real no momento.")
+    print("Nenhum ônibus encontrado em tempo real no momento.")
 
-#Linha 875A-10 - VILA MARIANA ↔ AEROPORTO (CONGONHAS)
+# Linha 875A-10 - Perdizes ↔ Aeroporto de Congonhas (via Av. Washington Luiz, Av. Jabaquara) 
 mapa.save("mapa_frota_875A-10.html")
 print("Pinos azuis = paradas | Pinos vermelhos = ônibus em tempo real")</code></pre>
 
@@ -243,12 +311,18 @@ Os dados são processados com <strong>Pandas</strong> e visualizados em um <stro
 </section>
 <section id="objetivo" class="level2">
 <h2 class="anchored" data-anchor-id="objetivo">Objetivo</h2>
-<p>Criar uma código que receba como parâmetro <code>"MMYYYY"</code> e gere um gráfico com a cotação do dólar no período correspondente.</p>
+<p>Criar um código que receba como parâmetro <code>"MMYYYY"</code> e gere um gráfico com a cotação do dólar no período correspondente.</p>
+<hr>
+</section>
+<section id="como-pensei" class="level2">
+<h2 class="anchored" data-anchor-id="como-pensei">Como pensei</h2>
+<p>Primeiro converti a string <code>"MMYYYY"</code> em um objeto <code>datetime</code> para obter o ano e o mês. Usei o <code>calendar.monthrange</code> para descobrir o último dia do mês e assim montar as datas inicial e final exigidas pela API. Em seguida fiz a requisição, transformei o JSON em <code>DataFrame</code> para ordenar e tratar as datas, e finalmente plotei a série temporal com <code>plotly.express</code>. Salvei o gráfico como <code>grafico_dolar.html</code> para facilitar a visualização no blog.</p>
 <hr>
 </section>
 <section id="código-em-python" class="level2">
 <h2 class="anchored" data-anchor-id="código-em-python">Código em Python</h2>
-<p>O código completo pode ser visto <a href="dolar.py">aqui</a>. Gráfico <a href="grafico_dolar.html">aqui</a>.</p>
+<p>O código completo pode ser visto <a href="dolar.py">aqui</a>.<br>
+Gráfico <a href="grafico_dolar.html">aqui</a>.</p>
 <hr>
 </section>
 <section id="resultado" class="level2">
@@ -261,8 +335,6 @@ Os dados são processados com <strong>Pandas</strong> e visualizados em um <stro
 
     data_inicial = first_date.strftime("%m-%d-%Y")
     data_final = first_date.replace(day=last_day).strftime("%m-%d-%Y")
-
-    print(data_inicial, data_final)
 
     # Monta a URL da API
     url = (
@@ -297,8 +369,7 @@ Os dados são processados com <strong>Pandas</strong> e visualizados em um <stro
     fig.write_html("grafico_dolar.html")
     print("Gráfico salvo em grafico_dolar.html — abra no navegador.")
 
-if __name__ == "__main__":
-    cotacao_dolar_periodo("082025")</code></pre>
+cotacao_dolar_periodo("082025")</code></pre>
 
 
 </section>

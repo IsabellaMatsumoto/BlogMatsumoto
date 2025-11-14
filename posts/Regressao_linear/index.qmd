@@ -1,7 +1,7 @@
 ---
 title: "Regressão Linear"
 date: 2025-11-13
-image: regressao.png
+image: grafico2.png
 description: "Análise da relação entre anos de estudo e salário utilizando regressão linear."
 categories: [Python, Matemática, Plotly]
 ---
@@ -10,83 +10,135 @@ categories: [Python, Matemática, Plotly]
 
 Nesta tarefa foi aplicada a técnica de **regressão linear** para analisar a relação entre os **anos de estudo (X)** e o **salário (y)**.  
 Os dados são carregados de arquivos `.txt` e os coeficientes são calculados manualmente com a **fórmula matricial**.  
-O gráfico gerado com **Plotly** mostra a linha estimada sobre os pontos dos dados.
+Foram utilizados dois métodos de visualização: **plotnine (matplotlib/ggplot-style)** e **Plotly (interativo)**.
 
 ---
 
 ## Objetivo
 
-Calcular os coeficientes da regressão linear por meio da fórmula matricial e exibir o gráfico resultante.
+Calcular os coeficientes da regressão linear por meio da fórmula matricial e exibir o gráfico resultante utilizando duas bibliotecas diferentes.
 
 ---
 
-## Código em Python
+## Como pensei
 
-O código completo pode ser visto [aqui](regressao.py).
-Rota [aqui](regressao_linear.html).
+Para resolver esse exercício eu trabalhei com duas abordagens.
 
+### 1. Código usando `plotnine`  
+Nesse caso, a lógica da regressão já estava pronta no código base.  
+O que eu fiz foi **adaptar a entrada dos dados**:  
+- Removi valores fixos escritos diretamente no código  
+- Passei a carregar tudo usando `np.loadtxt("x.txt")` e `np.loadtxt("y.txt")`  
 
 ---
 
-## Código em Python
+### 2. Código usando `Plotly`
+Aqui eu implementei **todo o processo completo**:  
+- carregar os dados  
+- montar a matriz X (com coluna de 1s)  
+- aplicar a **fórmula matricial da regressão linear**  
+- calcular o R² manualmente  
+- gerar o gráfico interativo  
+- salvar em HTML  
+
+Essa versão foi construída passo a passo a partir da matemática da regressão e resultou em um gráfico interativo.
+
+---
+
+## Código em Python 
+O código completo pode ser visto [aqui](regressao2.py.py).  
+Regressão Linear: [aqui](grafico2.png).
 
 ```{python}
 #| echo: false
-#| fig-cap: "Monitoramento de frota de ônibus - Linha 875A-10 - VILA MARIANA ↔ AEROPORTO (CONGONHAS)"
- import numpy as np
-    import plotly.graph_objects as go
+#| fig-cap: "Regressão linear (Plotnine)"
 
-    # Ler os dados dos arquivos
-    X = np.loadtxt("x.txt")  # anos de estudo
-    y = np.loadtxt("y.txt")  # salário
+    import numpy as np
+    from plotnine import (
+        ggplot, aes, geom_point, geom_abline, theme, element_text
+    )
+    import pandas as pd
 
-    # Montar a matriz X com coluna de 1s
-    X_matriz = np.column_stack((np.ones(len(X)), X))
+    # Ler os arquivos
+    valores_x = np.loadtxt("x.txt")
+    valores_y = np.loadtxt("y.txt")
 
-    # Calcular os coeficientes a e b com a fórmula matricial
-    beta = np.linalg.inv(X_matriz.T @ X_matriz) @ X_matriz.T @ y
-    a, b = beta[0], beta[1]
+    # Calcular coeficientes da regressão
+    X = np.column_stack((np.ones(len(valores_x)), valores_x))
+    beta = np.linalg.inv(X.T @ X) @ X.T @ valores_y
 
-    print(f"a (intercepto): {a:.4f}")
-    print(f"b (inclinação): {b:.4f}")
+    a = float(beta[0])   # intercepto
+    b = float(beta[1])   # inclinação
 
-    # Calcular valores previstos (reta estimada)
-    y_pred = a + b * X
+    print("a =", a)
+    print("b =", b)
 
-    # Calcular o R² (coeficiente de determinação)
-    ss_res = np.sum((y - y_pred) ** 2)
-    ss_tot = np.sum((y - np.mean(y)) ** 2)
-    r2 = 1 - (ss_res / ss_tot)
+    df = {"x": valores_x, "y": valores_y}
 
-    print(f"R²: {r2:.4f}")
-
-    # Criar o gráfico com Plotly
-    fig = go.Figure()
-
-    # Pontos reais
-    fig.add_trace(go.Scatter(
-        x=X, y=y,
-        mode="markers",
-        name="Dados reais",
-        marker=dict(color="blue", size=8)
-    ))
-
-    # Reta estimada
-    fig.add_trace(go.Scatter(
-        x=X, y=y_pred,
-        mode="lines",
-        name="Reta estimada",
-        line=dict(color="red", width=3)
-    ))
-
-    # Layout do gráfico
-    fig.update_layout(
-        title=f"Relação entre Anos de Estudo e Salário<br>a={a:.4f}, b={b:.4f}, R²={r2:.4f}",
-        xaxis_title="Anos de Estudo",
-        yaxis_title="Salário (R$)",
-        template="plotly_white"
+    plot = (
+        ggplot(pd.DataFrame(df), aes("x", "y"))
+        + geom_point()
+        + geom_abline(intercept=a, slope=b)
     )
 
-    # Salvar o gráfico em HTML
-    fig.write_html("regressao_linear.html")
-    print("Gráfico salvo como regressao_linear.html — abra no navegador para visualizar.")
+    plot.save("grafico2.png", dpi=300)
+
+    print("Gráfico salvo como grafico2.png")
+
+## Código em Python — Ploty
+O código completo pode be visto [aqui](regressao.py).  
+Regressão Linear: [aqui](grafico.html).
+
+    import numpy as np
+    import plotly.graph_objects as go
+    from sklearn.linear_model import LinearRegression
+
+    # Lê os dados dos arquivos
+    x = np.loadtxt('x.txt')
+    y = np.loadtxt('y.txt')
+
+    # Ajusta o formato dos dados
+    x = x.reshape(-1, 1)
+
+    # Cria e treina o modelo de regressão
+    modelo = LinearRegression()
+    modelo.fit(x, y)
+
+    # Faz previsões
+    y_pred = modelo.predict(x)
+
+    # Exibe os coeficientes
+    a = modelo.coef_[0]
+    b = modelo.intercept_
+    print(f"Equação da reta: y = {a:.4f}x + {b:.4f}")
+
+    # Cria o gráfico interativo
+    fig = go.Figure()
+
+    # Adiciona os pontos reais
+    fig.add_trace(go.Scatter(
+        x=x.flatten(), y=y,
+        mode='markers',
+        name='Pontos reais',
+        marker=dict(color='blue', size=8)
+    ))
+
+    # Adiciona a reta de regressão
+    fig.add_trace(go.Scatter(
+        x=x.flatten(), y=y_pred,
+        mode='lines',
+        name='Reta de regressão',
+        line=dict(color='red', width=2)
+    ))
+
+    # Configura layout
+    fig.update_layout(
+        title='Regressão Linear',
+        xaxis_title='X',
+        yaxis_title='Y',
+        template='plotly_white'
+    )
+
+    # Salva o gráfico em HTML
+    fig.write_html('grafico.html')
+

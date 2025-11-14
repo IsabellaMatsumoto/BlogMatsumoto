@@ -168,12 +168,18 @@ Os dados são processados com <strong>Pandas</strong> e visualizados em um <stro
 </section>
 <section id="objetivo" class="level2">
 <h2 class="anchored" data-anchor-id="objetivo">Objetivo</h2>
-<p>Criar uma código que receba como parâmetro <code>"MMYYYY"</code> e gere um gráfico com a cotação do dólar no período correspondente.</p>
+<p>Criar um código que receba como parâmetro <code>"MMYYYY"</code> e gere um gráfico com a cotação do dólar no período correspondente.</p>
+<hr>
+</section>
+<section id="como-pensei" class="level2">
+<h2 class="anchored" data-anchor-id="como-pensei">Como pensei</h2>
+<p>Primeiro converti a string <code>"MMYYYY"</code> em um objeto <code>datetime</code> para obter o ano e o mês. Usei o <code>calendar.monthrange</code> para descobrir o último dia do mês e assim montar as datas inicial e final exigidas pela API. Em seguida fiz a requisição, transformei o JSON em <code>DataFrame</code> para ordenar e tratar as datas, e finalmente plotei a série temporal com <code>plotly.express</code>. Salvei o gráfico como <code>grafico_dolar.html</code> para facilitar a visualização no blog.</p>
 <hr>
 </section>
 <section id="código-em-python" class="level2">
 <h2 class="anchored" data-anchor-id="código-em-python">Código em Python</h2>
-<p>O código completo pode ser visto <a href="dolar.py">aqui</a>. Gráfico <a href="grafico_dolar.html">aqui</a>.</p>
+<p>O código completo pode ser visto <a href="dolar.py">aqui</a>.<br>
+Gráfico <a href="grafico_dolar.html">aqui</a>.</p>
 <hr>
 </section>
 <section id="resultado" class="level2">
@@ -186,8 +192,6 @@ Os dados são processados com <strong>Pandas</strong> e visualizados em um <stro
 
     data_inicial = first_date.strftime("%m-%d-%Y")
     data_final = first_date.replace(day=last_day).strftime("%m-%d-%Y")
-
-    print(data_inicial, data_final)
 
     # Monta a URL da API
     url = (
@@ -222,8 +226,7 @@ Os dados são processados com <strong>Pandas</strong> e visualizados em um <stro
     fig.write_html("grafico_dolar.html")
     print("Gráfico salvo em grafico_dolar.html — abra no navegador.")
 
-if __name__ == "__main__":
-    cotacao_dolar_periodo("082025")</code></pre>
+cotacao_dolar_periodo("082025")</code></pre>
 
 
 </section>
