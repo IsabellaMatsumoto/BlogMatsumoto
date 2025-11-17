@@ -8,72 +8,71 @@ TOKEN = os.getenv("SPTRANS_TOKEN")
 
 s = requests.Session()
 auth = s.post(f"http://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token={TOKEN}")
-
 if auth.text.lower() != "true":
-    print("Falha na autenticação com o token SPTrans.")
+    print("Erro: Token inválido!")
     exit()
 
-linha_nome = "875A"
-url_linhas = f"http://api.olhovivo.sptrans.com.br/v2.1/Linha/Buscar?termosBusca={linha_nome}"
-res_linhas = s.get(url_linhas)
-linhas = res_linhas.json()
+busca = "875A"
+url_busca = f"http://api.olhovivo.sptrans.com.br/v2.1/Linha/Buscar?termosBusca={busca}"
+linhas = s.get(url_busca).json()
+
+# Filtrar exatamente a variante 875A-10 e sentido 1
+linhas = [l for l in linhas if l.get("lt") == "875A" and l.get("tl") == 10 and l.get("sl") == 1]
 
 if not linhas:
-    print("Nenhuma linha encontrada.")
+    print("Linha 875A-10 sentido 1 não encontrada.")
     exit()
-
-#Exibe as direções disponíveis 
-for i, l in enumerate(linhas, start=1):
-    sentido = "Ida" if l["sl"] == 1 else "Volta"
-    print(f"{i}. {l['lt']} - {l['tp']} → {l['ts']} ({sentido}) | Código: {l['cl']}")
-
 
 linha = linhas[0]
 codigo_linha = linha["cl"]
 sentido = linha["sl"]
 
-print(f"\nLinha selecionada: {linha['lt']} - {linha['tp']} → {linha['ts']} ({'Ida' if sentido == 1 else 'Volta'})")
+print(f"Linha selecionada: {linha['lt']}-{linha['tl']} | Sentido {sentido} | {linha['tp']} → {linha['ts']}")
 
-# Buscar paradas da linha 
-url_paradas = f"http://api.olhovivo.sptrans.com.br/v2.1/Parada/BuscarParadasPorLinha?codigoLinha={codigo_linha}&sentido={sentido}"
-res_paradas = s.get(url_paradas)
-paradas = res_paradas.json()
+url_paradas = (
+    f"http://api.olhovivo.sptrans.com.br/v2.1/Parada/BuscarParadasPorLinha?"
+    f"codigoLinha={codigo_linha}&sentido={sentido}"
+)
 
+paradas = s.get(url_paradas).json()
 if not paradas:
-    print("Nenhuma parada encontrada para esta linha e sentido.")
+    print("Nenhuma parada encontrada.")
     exit()
 
-# Criação do mapa 
+# Criar mapa centralizado na primeira parada
 mapa = folium.Map(location=[paradas[0]["py"], paradas[0]["px"]], zoom_start=13)
 
-# Pinos azuis = paradas
-for parada in paradas:
+# Pinos azuis das paradas
+for p in paradas:
     folium.Marker(
-        [parada["py"], parada["px"]],
-        popup=parada["np"],
+        [p["py"], p["px"]],
+        popup=p["np"],
         icon=folium.Icon(color="blue", icon="bus", prefix="fa")
     ).add_to(mapa)
 
-# Posições em tempo real 
-url_posicoes = f"http://api.olhovivo.sptrans.com.br/v2.1/Posicao?codigoLinha={codigo_linha}"
-res_posicoes = s.get(url_posicoes)
-dados_posicao = res_posicoes.json()
+url_posicao = f"http://api.olhovivo.sptrans.com.br/v2.1/Posicao?codigoLinha={codigo_linha}"
+dados = s.get(url_posicao).json()
 
 veiculos = []
-if dados_posicao and "vs" in dados_posicao:
-    veiculos = dados_posicao["vs"]
+if "l" in dados:
+    for bloco in dados["l"]:
+        if bloco.get("cl") == codigo_linha:
+            veiculos = bloco.get("vs", [])
+            break
 
+# Adicionar ônibus em vermelho
+for v in veiculos:
+    folium.Marker(
+        [v["py"], v["px"]],
+        popup=f"Ônibus {v.get('p')} (875A-10 s1)",
+        icon=folium.Icon(color="red", icon="location-dot", prefix="fa")
+    ).add_to(mapa)
 
-if veiculos:
-    for v in veiculos:
-        folium.Marker(
-            [v["py"], v["px"]],
-            popup=f"Ônibus {v['p']}",
-            icon=folium.Icon(color="red", icon="location-dot", prefix="fa")
-        ).add_to(mapa)
+if not veiculos:
+    print("⚠ Nenhum ônibus em tempo real encontrado no momento.")
 else:
-    print(" Nenhum ônibus encontrado em tempo real no momento.")
+    print(f"✔ Ônibus encontrados: {len(veiculos)}")
 
-#Linha 875A-10 - VILA MARIANA ↔ AEROPORTO (CONGONHAS)
-mapa.save("mapa_frota_875A-10.html")
 
+mapa.save("mapa_875A_10.html")
+print("Mapa gerado: mapa_875A")
