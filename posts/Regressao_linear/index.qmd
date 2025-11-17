@@ -1,0 +1,144 @@
+---
+title: "Regressão Linear"
+date: 2025-11-13
+image: grafico2.png
+description: "Análise da relação entre anos de estudo e salário utilizando regressão linear."
+categories: [Python, Matemática, Plotly]
+---
+
+## Resumo
+
+Nesta tarefa foi aplicada a técnica de **regressão linear** para analisar a relação entre os **anos de estudo (X)** e o **salário (y)**.  
+Os dados são carregados de arquivos `.txt` e os coeficientes são calculados manualmente com a **fórmula matricial**.  
+Foram utilizados dois métodos de visualização: **plotnine (matplotlib/ggplot-style)** e **Plotly (interativo)**.
+
+---
+
+## Objetivo
+
+Calcular os coeficientes da regressão linear por meio da fórmula matricial e exibir o gráfico resultante utilizando duas bibliotecas diferentes.
+
+---
+
+## Como pensei
+
+Para resolver esse exercício eu trabalhei com duas abordagens.
+
+### 1. Código usando `plotnine`  
+Nesse caso, a lógica da regressão já estava pronta no código base.  
+O que eu fiz foi **adaptar a entrada dos dados**:  
+- Removi valores fixos escritos diretamente no código  
+- Passei a carregar tudo usando `np.loadtxt("x.txt")` e `np.loadtxt("y.txt")`  
+
+---
+
+### 2. Código usando `Plotly`
+Aqui eu implementei **todo o processo completo**:  
+- carregar os dados  
+- montar a matriz X (com coluna de 1s)  
+- aplicar a **fórmula matricial da regressão linear**  
+- calcular o R² manualmente  
+- gerar o gráfico interativo  
+- salvar em HTML  
+
+Essa versão foi construída passo a passo a partir da matemática da regressão e resultou em um gráfico interativo.
+
+---
+
+## Código em Python 
+O código completo pode ser visto [aqui](regressao2.py.py).  
+Regressão Linear: [aqui](grafico2.png).
+
+```{python}
+#| echo: false
+#| fig-cap: "Regressão linear (Plotnine)"
+
+    import numpy as np
+    from plotnine import (
+        ggplot, aes, geom_point, geom_abline, theme, element_text
+    )
+    import pandas as pd
+
+    # Ler os arquivos
+    valores_x = np.loadtxt("x.txt")
+    valores_y = np.loadtxt("y.txt")
+
+    # Calcular coeficientes da regressão
+    X = np.column_stack((np.ones(len(valores_x)), valores_x))
+    beta = np.linalg.inv(X.T @ X) @ X.T @ valores_y
+
+    a = float(beta[0])   # intercepto
+    b = float(beta[1])   # inclinação
+
+    print("a =", a)
+    print("b =", b)
+
+    df = {"x": valores_x, "y": valores_y}
+
+    plot = (
+        ggplot(pd.DataFrame(df), aes("x", "y"))
+        + geom_point()
+        + geom_abline(intercept=a, slope=b)
+    )
+
+    plot.save("grafico2.png", dpi=300)
+
+    print("Gráfico salvo como grafico2.png")
+
+## Código em Python — Ploty
+O código completo pode be visto [aqui](regressao.py).  
+Regressão Linear: [aqui](grafico.html).
+
+    import numpy as np
+    import plotly.graph_objects as go
+    from sklearn.linear_model import LinearRegression
+
+    # Lê os dados dos arquivos
+    x = np.loadtxt('x.txt')
+    y = np.loadtxt('y.txt')
+
+    # Ajusta o formato dos dados
+    x = x.reshape(-1, 1)
+
+    # Cria e treina o modelo de regressão
+    modelo = LinearRegression()
+    modelo.fit(x, y)
+
+    # Faz previsões
+    y_pred = modelo.predict(x)
+
+    # Exibe os coeficientes
+    a = modelo.coef_[0]
+    b = modelo.intercept_
+    print(f"Equação da reta: y = {a:.4f}x + {b:.4f}")
+
+    # Cria o gráfico interativo
+    fig = go.Figure()
+
+    # Adiciona os pontos reais
+    fig.add_trace(go.Scatter(
+        x=x.flatten(), y=y,
+        mode='markers',
+        name='Pontos reais',
+        marker=dict(color='blue', size=8)
+    ))
+
+    # Adiciona a reta de regressão
+    fig.add_trace(go.Scatter(
+        x=x.flatten(), y=y_pred,
+        mode='lines',
+        name='Reta de regressão',
+        line=dict(color='red', width=2)
+    ))
+
+    # Configura layout
+    fig.update_layout(
+        title='Regressão Linear',
+        xaxis_title='X',
+        yaxis_title='Y',
+        template='plotly_white'
+    )
+
+    # Salva o gráfico em HTML
+    fig.write_html('grafico.html')
+

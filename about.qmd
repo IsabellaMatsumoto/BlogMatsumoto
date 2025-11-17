@@ -1,0 +1,19 @@
+---
+title: "Sobre"
+image: foto.png
+about:
+  template: jolla
+  links:
+    - icon: linkedin
+      text: LinkedIn
+      href: https://www.linkedin.com/in/isabella-matsumoto/
+    - icon: github
+      text: Github
+      href: https://github.com/IsabellaMatsumoto
+
+---
+
+Este espaço foi criado para **compartilhar meus trabalhos e projetos** desenvolvidos ao longo da minha jornada em **Engenharia da Computação** e **Tecnologia da Informação**.  
+Aqui você vai encontrar publicações sobre **programação, design, desenvolvimento de sites** e outras áreas que fazem parte do meu aprendizado.
+
+O objetivo do blog é funcionar como um **portfólio digital**, mostrando minha evolução, ideias e experiências em cada projeto 
