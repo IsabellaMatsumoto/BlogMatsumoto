@@ -1,0 +1,149 @@
+[
+  {
+    "objectID": "posts/Regressao_linear/index.html",
+    "href": "posts/Regressao_linear/index.html",
+    "title": "Regressão Linear",
+    "section": "",
+    "text": "Nesta tarefa foi aplicada a técnica de regressão linear para analisar a relação entre os anos de estudo (X) e o salário (y).\nOs dados são carregados de arquivos .txt e os coeficientes são calculados manualmente com a fórmula matricial.\nForam utilizados dois métodos de visualização: plotnine (matplotlib/ggplot-style) e Plotly (interativo)."
+  },
+  {
+    "objectID": "posts/Regressao_linear/index.html#resumo",
+    "href": "posts/Regressao_linear/index.html#resumo",
+    "title": "Regressão Linear",
+    "section": "",
+    "text": "Nesta tarefa foi aplicada a técnica de regressão linear para analisar a relação entre os anos de estudo (X) e o salário (y).\nOs dados são carregados de arquivos .txt e os coeficientes são calculados manualmente com a fórmula matricial.\nForam utilizados dois métodos de visualização: plotnine (matplotlib/ggplot-style) e Plotly (interativo)."
+  },
+  {
+    "objectID": "posts/Regressao_linear/index.html#objetivo",
+    "href": "posts/Regressao_linear/index.html#objetivo",
+    "title": "Regressão Linear",
+    "section": "Objetivo",
+    "text": "Objetivo\nCalcular os coeficientes da regressão linear por meio da fórmula matricial e exibir o gráfico resultante utilizando duas bibliotecas diferentes."
+  },
+  {
+    "objectID": "posts/Regressao_linear/index.html#como-pensei",
+    "href": "posts/Regressao_linear/index.html#como-pensei",
+    "title": "Regressão Linear",
+    "section": "Como pensei",
+    "text": "Como pensei\nPara resolver esse exercício eu trabalhei com duas abordagens.\n\n1. Código usando plotnine\nNesse caso, a lógica da regressão já estava pronta no código base.\nO que eu fiz foi adaptar a entrada dos dados:\n- Removi valores fixos escritos diretamente no código\n- Passei a carregar tudo usando np.loadtxt(\"x.txt\") e np.loadtxt(\"y.txt\")\n\n\n\n2. Código usando Plotly\nAqui eu implementei todo o processo completo:\n- carregar os dados\n- montar a matriz X (com coluna de 1s)\n- aplicar a fórmula matricial da regressão linear\n- calcular o R² manualmente\n- gerar o gráfico interativo\n- salvar em HTML\nEssa versão foi construída passo a passo a partir da matemática da regressão e resultou em um gráfico interativo."
+  },
+  {
+    "objectID": "posts/Regressao_linear/index.html#código-em-python",
+    "href": "posts/Regressao_linear/index.html#código-em-python",
+    "title": "Regressão Linear",
+    "section": "Código em Python",
+    "text": "Código em Python\nO código completo pode ser visto aqui.\nRegressão Linear: aqui.\n#| echo: false #| fig-cap: “Regressão linear (Plotnine)”\nimport numpy as np\nfrom plotnine import (\n    ggplot, aes, geom_point, geom_abline, theme, element_text\n)\nimport pandas as pd\n\n# Ler os arquivos\nvalores_x = np.loadtxt(\"x.txt\")\nvalores_y = np.loadtxt(\"y.txt\")\n\n# Calcular coeficientes da regressão\nX = np.column_stack((np.ones(len(valores_x)), valores_x))\nbeta = np.linalg.inv(X.T @ X) @ X.T @ valores_y\n\na = float(beta[0])   # intercepto\nb = float(beta[1])   # inclinação\n\nprint(\"a =\", a)\nprint(\"b =\", b)\n\ndf = {\"x\": valores_x, \"y\": valores_y}\n\nplot = (\n    ggplot(pd.DataFrame(df), aes(\"x\", \"y\"))\n    + geom_point()\n    + geom_abline(intercept=a, slope=b)\n)\n\nplot.save(\"grafico2.png\", dpi=300)\n\nprint(\"Gráfico salvo como grafico2.png\")"
+  },
+  {
+    "objectID": "posts/Regressao_linear/index.html#código-em-python-ploty",
+    "href": "posts/Regressao_linear/index.html#código-em-python-ploty",
+    "title": "Regressão Linear",
+    "section": "Código em Python — Ploty",
+    "text": "Código em Python — Ploty\nO código completo pode be visto aqui.\nRegressão Linear: aqui.\nimport numpy as np\nimport plotly.graph_objects as go\nfrom sklearn.linear_model import LinearRegression\n\n# Lê os dados dos arquivos\nx = np.loadtxt('x.txt')\ny = np.loadtxt('y.txt')\n\n# Ajusta o formato dos dados\nx = x.reshape(-1, 1)\n\n# Cria e treina o modelo de regressão\nmodelo = LinearRegression()\nmodelo.fit(x, y)\n\n# Faz previsões\ny_pred = modelo.predict(x)\n\n# Exibe os coeficientes\na = modelo.coef_[0]\nb = modelo.intercept_\nprint(f\"Equação da reta: y = {a:.4f}x + {b:.4f}\")\n\n# Cria o gráfico interativo\nfig = go.Figure()\n\n# Adiciona os pontos reais\nfig.add_trace(go.Scatter(\n    x=x.flatten(), y=y,\n    mode='markers',\n    name='Pontos reais',\n    marker=dict(color='blue', size=8)\n))\n\n# Adiciona a reta de regressão\nfig.add_trace(go.Scatter(\n    x=x.flatten(), y=y_pred,\n    mode='lines',\n    name='Reta de regressão',\n    line=dict(color='red', width=2)\n))\n\n# Configura layout\nfig.update_layout(\n    title='Regressão Linear',\n    xaxis_title='X',\n    yaxis_title='Y',\n    template='plotly_white'\n)\n\n# Salva o gráfico em HTML\nfig.write_html('grafico.html')"
+  },
+  {
+    "objectID": "posts/cotacao_dolar/index.html",
+    "href": "posts/cotacao_dolar/index.html",
+    "title": "Cotação do Dólar por Período",
+    "section": "",
+    "text": "Nesta atividade foi desenvolvida uma rotina em Python que consulta a API do Banco Central (PTAX) para obter a cotação do dólar em um período específico.\nA função recebe uma string no formato \"MMYYYY\" e determina automaticamente as datas inicial e final do mês.\nOs dados são processados com Pandas e visualizados em um gráfico de linha interativo com Plotly."
+  },
+  {
+    "objectID": "posts/cotacao_dolar/index.html#resumo",
+    "href": "posts/cotacao_dolar/index.html#resumo",
+    "title": "Cotação do Dólar por Período",
+    "section": "",
+    "text": "Nesta atividade foi desenvolvida uma rotina em Python que consulta a API do Banco Central (PTAX) para obter a cotação do dólar em um período específico.\nA função recebe uma string no formato \"MMYYYY\" e determina automaticamente as datas inicial e final do mês.\nOs dados são processados com Pandas e visualizados em um gráfico de linha interativo com Plotly."
+  },
+  {
+    "objectID": "posts/cotacao_dolar/index.html#objetivo",
+    "href": "posts/cotacao_dolar/index.html#objetivo",
+    "title": "Cotação do Dólar por Período",
+    "section": "Objetivo",
+    "text": "Objetivo\nCriar um código que receba como parâmetro \"MMYYYY\" e gere um gráfico com a cotação do dólar no período correspondente."
+  },
+  {
+    "objectID": "posts/cotacao_dolar/index.html#como-pensei",
+    "href": "posts/cotacao_dolar/index.html#como-pensei",
+    "title": "Cotação do Dólar por Período",
+    "section": "Como pensei",
+    "text": "Como pensei\nPrimeiro converti a string \"MMYYYY\" em um objeto datetime para obter o ano e o mês. Usei o calendar.monthrange para descobrir o último dia do mês e assim montar as datas inicial e final exigidas pela API. Em seguida fiz a requisição, transformei o JSON em DataFrame para ordenar e tratar as datas, e finalmente plotei a série temporal com plotly.express. Salvei o gráfico como grafico_dolar.html para facilitar a visualização no blog."
+  },
+  {
+    "objectID": "posts/cotacao_dolar/index.html#código-em-python",
+    "href": "posts/cotacao_dolar/index.html#código-em-python",
+    "title": "Cotação do Dólar por Período",
+    "section": "Código em Python",
+    "text": "Código em Python\nO código completo pode ser visto aqui.\nGráfico aqui."
+  },
+  {
+    "objectID": "posts/cotacao_dolar/index.html#resultado",
+    "href": "posts/cotacao_dolar/index.html#resultado",
+    "title": "Cotação do Dólar por Período",
+    "section": "Resultado",
+    "text": "Resultado\n#| echo: false #| fig-cap: “Cotação do Dólar em Agosto de 2025” import requests import pandas as pd import plotly.express as px import calendar from datetime import datetime\ndef cotacao_dolar_periodo(mes_ano: str):\n    # Converte string \"MMYYYY\" em datas inicial e final\n    first_date = datetime.strptime(mes_ano, \"%m%Y\")\n    last_day = calendar.monthrange(first_date.year, first_date.month)[1]\n\n    data_inicial = first_date.strftime(\"%m-%d-%Y\")\n    data_final = first_date.replace(day=last_day).strftime(\"%m-%d-%Y\")\n\n    # Monta a URL da API\n    url = (\n        \"https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/\"\n        f\"CotacaoDolarPeriodo(dataInicial=@dataInicial,dataFinalCotacao=@dataFinalCotacao)?\"\n        f\"@dataInicial='{data_inicial}'&@dataFinalCotacao='{data_final}'&\"\n        \"$top=1000&$format=json&$select=cotacaoCompra,dataHoraCotacao\"\n    )\n\n    # Faz a requisição\n    r = requests.get(url)\n    if r.status_code != 200:\n        raise Exception(\"Erro ao acessar a API do Banco Central\")\n\n    dados = r.json().get(\"value\", [])\n    if not dados:\n        raise Exception(\"Nenhum dado retornado pela API\")\n\n    # Converte para DataFrame\n    df = pd.DataFrame(dados)\n    df[\"dataHoraCotacao\"] = pd.to_datetime(df[\"dataHoraCotacao\"])\n    df = df.sort_values(\"dataHoraCotacao\")\n\n    # Cria o gráfico\n    fig = px.line(\n        df,\n        x=\"dataHoraCotacao\",\n        y=\"cotacaoCompra\",\n        title=f\"Cotação do Dólar - {first_date.strftime('%B de %Y')}\",\n        labels={\"dataHoraCotacao\": \"Data\", \"cotacaoCompra\": \"Cotação (R$)\"}\n    )\n    fig.write_html(\"grafico_dolar.html\")\n    print(\"Gráfico salvo em grafico_dolar.html — abra no navegador.\")\n\ncotacao_dolar_periodo(\"082025\")"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "Sobre",
+    "section": "",
+    "text": "Este espaço foi criado para compartilhar meus trabalhos e projetos desenvolvidos ao longo da minha jornada em Engenharia da Computação e Tecnologia da Informação.\nAqui você vai encontrar publicações sobre programação, design, desenvolvimento de sites e outras áreas que fazem parte do meu aprendizado.\nO objetivo do blog é funcionar como um portfólio digital, mostrando minha evolução, ideias e experiências em cada projeto"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Isabella Matsumoto",
+    "section": "",
+    "text": "Engenharia da Computação\nBem-vindo(a) ao BlogMatsumoto, um espaço para compartilhar ideias, projetos e aprendizados sobre TI, engenharia da computação, design e curiosidades do mundo tech"
+  },
+  {
+    "objectID": "index.html#últimos-posts",
+    "href": "index.html#últimos-posts",
+    "title": "Isabella Matsumoto",
+    "section": "Últimos posts",
+    "text": "Últimos posts"
+  },
+  {
+    "objectID": "posts/Monitoramento_frota/index.html",
+    "href": "posts/Monitoramento_frota/index.html",
+    "title": "Monitoramento de Frota de Ônibus",
+    "section": "",
+    "text": "O objetivo desta atividade foi construir um mapa interativo com as paradas de uma linha de ônibus e as posições em tempo real dos veículos.\nA aplicação consulta a API Olho Vivo (SPTrans), utiliza um token de autenticação e exibe no mapa duas camadas:\n- Paradas (pinos azuis)\n- Ônibus em tempo real (pinos vermelhos)\nO resultado final é um mapa dinâmico que facilita visualizar a operação da linha."
+  },
+  {
+    "objectID": "posts/Monitoramento_frota/index.html#resumo",
+    "href": "posts/Monitoramento_frota/index.html#resumo",
+    "title": "Monitoramento de Frota de Ônibus",
+    "section": "",
+    "text": "O objetivo desta atividade foi construir um mapa interativo com as paradas de uma linha de ônibus e as posições em tempo real dos veículos.\nA aplicação consulta a API Olho Vivo (SPTrans), utiliza um token de autenticação e exibe no mapa duas camadas:\n- Paradas (pinos azuis)\n- Ônibus em tempo real (pinos vermelhos)\nO resultado final é um mapa dinâmico que facilita visualizar a operação da linha."
+  },
+  {
+    "objectID": "posts/Monitoramento_frota/index.html#objetivo",
+    "href": "posts/Monitoramento_frota/index.html#objetivo",
+    "title": "Monitoramento de Frota de Ônibus",
+    "section": "Objetivo",
+    "text": "Objetivo\nRepresentar no mapa tanto as paradas fixas quanto os ônibus em movimento de uma linha específica."
+  },
+  {
+    "objectID": "posts/Monitoramento_frota/index.html#como-pensei-explicação-curta",
+    "href": "posts/Monitoramento_frota/index.html#como-pensei-explicação-curta",
+    "title": "Monitoramento de Frota de Ônibus",
+    "section": "Como pensei (explicação curta)",
+    "text": "Como pensei (explicação curta)\nComecei carregando o token do arquivo .env e autenticando na API usando requests.Session, pois essa API exige manter a sessão válida após o login.\nEm seguida busquei a linha pelo nome (“875A”), já que a API retorna o código interno da linha, que é necessário para consultar paradas e posições.\nCom o código e o sentido retornados, fiz a requisição das paradas e utilizei suas coordenadas para criar um mapa com o Folium, adicionando um pino azul para cada parada.\nDepois consultei o endpoint de posição e, se houvesse ônibus circulando, adicionei pinos vermelhos mostrando o veículo e sua localização atual.\nPor fim salvei tudo em um arquivo HTML, permitindo visualizar paradas + frota em tempo real diretamente no navegador."
+  },
+  {
+    "objectID": "posts/Monitoramento_frota/index.html#código-em-python",
+    "href": "posts/Monitoramento_frota/index.html#código-em-python",
+    "title": "Monitoramento de Frota de Ônibus",
+    "section": "Código em Python",
+    "text": "Código em Python\nO código completo aqui.\nRota gerada no mapa: mapa_frota_875A-10."
+  },
+  {
+    "objectID": "posts/Monitoramento_frota/index.html#código-em-python-1",
+    "href": "posts/Monitoramento_frota/index.html#código-em-python-1",
+    "title": "Monitoramento de Frota de Ônibus",
+    "section": "Código em Python",
+    "text": "Código em Python\n#| echo: false #| fig-cap: “Monitoramento de frota de ônibus - Linha 875A-10 - Perdizes ↔︎ Aeroporto de Congonhas (via Av. Washington Luiz, Av. Jabaquara)”\nimport os\nimport requests\nimport folium\nfrom dotenv import load_dotenv\n\nload_dotenv(\".env\")\nTOKEN = os.getenv(\"SPTRANS_TOKEN\")\n\ns = requests.Session()\nauth = s.post(f\"http://api.olhovivo.sptrans.com.br/v2.1/Login/Autenticar?token={TOKEN}\")\n\nif auth.text.lower() != \"true\":\n    print(\"Falha na autenticação com o token SPTrans.\")\n    exit()\n\nlinha_nome = \"875A\"\nurl_linhas = f\"http://api.olhovivo.sptrans.com.br/v2.1/Linha/Buscar?termosBusca={linha_nome}\"\nres_linhas = s.get(url_linhas)\nlinhas = res_linhas.json()\n\nif not linhas:\n    print(\"Nenhuma linha encontrada.\")\n    exit()\n\n# Exibe as direções disponíveis\nfor i, l in enumerate(linhas, start=1):\n    sentido = \"Ida\" if l[\"sl\"] == 1 else \"Volta\"\n    print(f\"{i}. {l['lt']} - {l['tp']} → {l['ts']} ({sentido}) | Código: {l['cl']}\")\n\n# Usa a primeira linha retornada\nlinha = linhas[0]\ncodigo_linha = linha[\"cl\"]\nsentido = linha[\"sl\"]\n\nprint(f\"\\nLinha selecionada: {linha['lt']} - {linha['tp']} → {linha['ts']} ({'Ida' if sentido == 1 else 'Volta'})\")\n\n# Buscar paradas da linha\nurl_paradas = f\"http://api.olhovivo.sptrans.com.br/v2.1/Parada/BuscarParadasPorLinha?codigoLinha={codigo_linha}&sentido={sentido}\"\nres_paradas = s.get(url_paradas)\nparadas = res_paradas.json()\n\nif not paradas:\n    print(\"Nenhuma parada encontrada para esta linha e sentido.\")\n    exit()\n\n# Criação do mapa\nmapa = folium.Map(location=[paradas[0][\"py\"], paradas[0][\"px\"]], zoom_start=13)\n\n# Pinos azuis = paradas\nfor parada in paradas:\n    folium.Marker(\n        [parada[\"py\"], parada[\"px\"]],\n        popup=parada[\"np\"],\n        icon=folium.Icon(color=\"blue\", icon=\"bus\", prefix=\"fa\")\n    ).add_to(mapa)\n\n# Posições em tempo real\nurl_posicoes = f\"http://api.olhovivo.sptrans.com.br/v2.1/Posicao?codigoLinha={codigo_linha}\"\nres_posicoes = s.get(url_posicoes)\ndados_posicao = res_posicoes.json()\n\nveiculos = []\nif dados_posicao and \"vs\" in dados_posicao:\n    veiculos = dados_posicao[\"vs\"]\n\n# Pinos vermelhos = ônibus\nif veiculos:\n    for v in veiculos:\n        folium.Marker(\n            [v[\"py\"], v[\"px\"]],\n            popup=f\"Ônibus {v['p']}\",\n            icon=folium.Icon(color=\"red\", icon=\"location-dot\", prefix=\"fa\")\n        ).add_to(mapa)\nelse:\n    print(\"Nenhum ônibus encontrado em tempo real no momento.\")\n\n# Linha 875A-10 - Perdizes ↔ Aeroporto de Congonhas (via Av. Washington Luiz, Av. Jabaquara) \nmapa.save(\"mapa_frota_875A-10.html\")\nprint(\"Pinos azuis = paradas | Pinos vermelhos = ônibus em tempo real\")"
+  }
+]
