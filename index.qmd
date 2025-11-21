@@ -19,7 +19,7 @@ listing:
 # Isabella Matsumoto
 **Engenharia da Computação** 
 
-Bem-vindo(a) ao **BlogMatsumoto**, um espaço para compartilhar ideias, projetos e aprendizados sobre  **TI, engenharia da computação, design e curiosidades do mundo tech** 
+Bem-vindo(a) ao **BlogMatsumoto**, um espaço para compartilhar ideias, projetos e aprendizados sobre  **TI, engenharia da computação e design** 
 
 </div>
 
