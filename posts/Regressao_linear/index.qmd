@@ -1,6 +1,6 @@
 ---
 title: "Regressão Linear"
-date: 2025-11-13
+date: 2025-11-21
 image: grafico2.png
 description: "Análise da relação entre anos de estudo e salário utilizando regressão linear."
 categories: [Python, Matemática, Plotly]
